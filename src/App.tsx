@@ -17,21 +17,31 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
-  const [requiresBiometric, setRequiresBiometric] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
     // Vérifier si on est sur une plateforme native
-    const native = isNativePlatform();
-    setRequiresBiometric(native);
+    const checkPlatform = async () => {
+      const native = isNativePlatform();
+      
+      // Si pas natif, déverrouiller automatiquement
+      if (!native) {
+        setIsUnlocked(true);
+      }
+      
+      setIsChecking(false);
+    };
     
-    // Si pas natif, déverrouiller automatiquement
-    if (!native) {
-      setIsUnlocked(true);
-    }
+    checkPlatform();
   }, []);
 
+  // Pendant la vérification, ne rien afficher (ou un loader)
+  if (isChecking) {
+    return null;
+  }
+
   // Afficher l'écran de verrouillage biométrique si nécessaire
-  if (requiresBiometric && !isUnlocked) {
+  if (!isUnlocked) {
     return (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
