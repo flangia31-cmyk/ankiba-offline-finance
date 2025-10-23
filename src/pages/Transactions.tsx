@@ -3,25 +3,12 @@ import { Layout } from "@/components/Layout";
 import { TransactionCard } from "@/components/TransactionCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { getData, deleteTransaction, addTransaction, Transaction } from "@/lib/storage";
+import { getData, deleteTransaction, addTransaction, Transaction, EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/storage";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-
-const categories = [
-  "Alimentation",
-  "Transport",
-  "Logement",
-  "Santé",
-  "Loisirs",
-  "Éducation",
-  "Shopping",
-  "Salaire",
-  "Freelance",
-  "Autre",
-];
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -120,15 +107,15 @@ export default function Transactions() {
                   <Select
                     value={formData.type}
                     onValueChange={(value: "income" | "expense") =>
-                      setFormData({ ...formData, type: value })
+                      setFormData({ ...formData, type: value, category: "" })
                     }
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="income">Revenu</SelectItem>
-                      <SelectItem value="expense">Dépense</SelectItem>
+                      <SelectItem value="income">💰 Revenu</SelectItem>
+                      <SelectItem value="expense">💸 Dépense</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -154,8 +141,24 @@ export default function Transactions() {
                       <SelectValue placeholder="Choisir une catégorie" />
                     </SelectTrigger>
                     <SelectContent>
-                      {categories.map((cat) => (
+                      {(formData.type === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES).map((cat) => (
                         <SelectItem key={cat} value={cat}>
+                          {cat === 'Alimentation' && '🍽️ '} 
+                          {cat === 'Transport' && '🚗 '} 
+                          {cat === 'Shopping' && '🛍️ '} 
+                          {cat === 'Santé' && '💊 '} 
+                          {cat === 'Loisirs' && '🎮 '} 
+                          {cat === 'Logement' && '🏠 '} 
+                          {cat === 'Factures' && '📄 '} 
+                          {cat === 'Éducation' && '📚 '} 
+                          {cat === 'Salaire' && '💰 '} 
+                          {cat === 'Freelance' && '💼 '} 
+                          {cat === 'Vente' && '🏷️ '} 
+                          {cat === 'Investissement' && '📈 '} 
+                          {cat === 'Cadeau' && '🎁 '} 
+                          {cat === 'Remboursement' && '💸 '} 
+                          {cat === 'Prime' && '🎯 '} 
+                          {cat === 'Autre' && '📦 '}
                           {cat}
                         </SelectItem>
                       ))}

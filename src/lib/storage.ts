@@ -8,6 +8,29 @@ export interface Transaction {
   date: string;
 }
 
+export const EXPENSE_CATEGORIES = [
+  'Alimentation',
+  'Transport',
+  'Shopping',
+  'Santé',
+  'Loisirs',
+  'Logement',
+  'Factures',
+  'Éducation',
+  'Autre'
+];
+
+export const INCOME_CATEGORIES = [
+  'Salaire',
+  'Freelance',
+  'Vente',
+  'Investissement',
+  'Cadeau',
+  'Remboursement',
+  'Prime',
+  'Autre'
+];
+
 export interface Goal {
   id: string;
   name: string;
