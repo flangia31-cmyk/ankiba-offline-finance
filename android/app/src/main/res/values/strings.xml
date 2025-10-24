@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ankiba</string>
+    <string name="title_activity_main">ankiba</string>
+    <string name="package_name">com.ankiba.app</string>
+    <string name="custom_url_scheme">com.ankiba.app</string>
+</resources>
