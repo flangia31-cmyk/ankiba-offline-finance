@@ -3,7 +3,7 @@ import { Layout } from "@/components/Layout";
 import { GoalCard } from "@/components/GoalCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { getData, deleteGoal, addGoal, updateGoal, Goal } from "@/lib/storage";
+import { getData, deleteGoal, addGoal, updateGoal, Goal, getCurrency, CURRENCIES, formatAmount } from "@/lib/storage";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,9 @@ export default function Goals() {
   const [selectedGoalId, setSelectedGoalId] = useState<string>("");
   const [amountToAdd, setAmountToAdd] = useState("");
   const { toast } = useToast();
+  
+  const currencyCode = getCurrency() || 'KMF';
+  const currency = CURRENCIES.find(c => c.code === currencyCode) || CURRENCIES[0];
 
   const [formData, setFormData] = useState({
     name: "",
@@ -69,7 +72,7 @@ export default function Goals() {
       setAmountToAdd("");
       toast({
         title: "Montant ajouté",
-        description: `${amount.toFixed(2)} F ajouté à votre objectif.`,
+        description: `${formatAmount(amount)} ajouté à votre objectif.`,
       });
     }
   };
@@ -140,7 +143,7 @@ export default function Goals() {
                 </div>
 
                 <div>
-                  <Label>Montant cible (F CFA)</Label>
+                  <Label>Montant cible ({currency.symbol})</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -175,7 +178,7 @@ export default function Goals() {
             </DialogHeader>
             <form onSubmit={handleSubmitAmount} className="space-y-4">
               <div>
-                <Label>Montant à ajouter (F CFA)</Label>
+                <Label>Montant à ajouter ({currency.symbol})</Label>
                 <Input
                   type="number"
                   step="0.01"

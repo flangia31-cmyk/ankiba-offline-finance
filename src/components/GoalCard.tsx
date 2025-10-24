@@ -1,4 +1,4 @@
-import { Goal } from "@/lib/storage";
+import { Goal, formatAmount } from "@/lib/storage";
 import { Target, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -49,8 +49,8 @@ export const GoalCard = ({ goal, onDelete, onAddAmount }: GoalCardProps) => {
         
         <div className="flex justify-between items-end">
           <div>
-            <p className="text-2xl font-bold text-primary">{goal.currentAmount.toFixed(2)} F</p>
-            <p className="text-sm text-muted-foreground">sur {goal.targetAmount.toFixed(2)} F</p>
+            <p className="text-2xl font-bold text-primary">{formatAmount(goal.currentAmount)}</p>
+            <p className="text-sm text-muted-foreground">sur {formatAmount(goal.targetAmount)}</p>
           </div>
           <Button
             onClick={() => onAddAmount(goal.id)}
@@ -62,7 +62,7 @@ export const GoalCard = ({ goal, onDelete, onAddAmount }: GoalCardProps) => {
         
         {remaining > 0 && (
           <p className="text-sm text-muted-foreground text-center pt-2 border-t border-border/50">
-            Plus que {remaining.toFixed(2)} F à économiser !
+            Plus que {formatAmount(remaining)} à économiser !
           </p>
         )}
       </div>

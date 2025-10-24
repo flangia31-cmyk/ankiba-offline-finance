@@ -40,19 +40,74 @@ export interface Goal {
   createdAt: string;
 }
 
+export interface Currency {
+  code: string;
+  symbol: string;
+  name: string;
+  flag: string;
+}
+
+export const CURRENCIES: Currency[] = [
+  { code: 'KMF', symbol: 'FC', name: 'Franc comorien', flag: '🇰🇲' },
+  { code: 'MGA', symbol: 'Ar', name: 'Ariary malgache', flag: '🇲🇬' },
+  { code: 'EUR', symbol: '€', name: 'Euro', flag: '🇪🇺' },
+  { code: 'USD', symbol: '$', name: 'Dollar américain', flag: '🇺🇸' },
+  { code: 'GBP', symbol: '£', name: 'Livre sterling', flag: '🇬🇧' },
+  { code: 'ZAR', symbol: 'R', name: 'Rand sud-africain', flag: '🇿🇦' },
+];
+
 export interface FinancialData {
   transactions: Transaction[];
   goals: Goal[];
   monthlyBudget: number;
+  currency?: string; // Currency code (KMF, EUR, etc.)
 }
 
 const STORAGE_KEY = 'ankiba_data';
+const CURRENCY_KEY = 'ankiba_currency';
 
 // Initialize default data
 const defaultData: FinancialData = {
   transactions: [],
   goals: [],
   monthlyBudget: 0,
+  currency: undefined,
+};
+
+// Currency operations
+export const getCurrency = (): string | null => {
+  try {
+    return localStorage.getItem(CURRENCY_KEY);
+  } catch (error) {
+    console.error('Error reading currency:', error);
+    return null;
+  }
+};
+
+export const setCurrency = (currencyCode: string): void => {
+  try {
+    localStorage.setItem(CURRENCY_KEY, currencyCode);
+  } catch (error) {
+    console.error('Error saving currency:', error);
+  }
+};
+
+export const formatAmount = (amount: number): string => {
+  const currencyCode = getCurrency();
+  if (!currencyCode) return `${amount.toFixed(2)} F`;
+  
+  const currency = CURRENCIES.find(c => c.code === currencyCode);
+  if (!currency) return `${amount.toFixed(2)} F`;
+  
+  // Format based on currency
+  if (currency.code === 'EUR' || currency.code === 'GBP') {
+    return `${amount.toFixed(2)} ${currency.symbol}`;
+  } else if (currency.code === 'USD') {
+    return `${currency.symbol}${amount.toFixed(2)}`;
+  } else {
+    // For KMF, MGA, ZAR - no decimals
+    return `${amount.toFixed(0)} ${currency.symbol}`;
+  }
 };
 
 // Get all data

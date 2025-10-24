@@ -3,7 +3,7 @@ import { Layout } from "@/components/Layout";
 import { TransactionCard } from "@/components/TransactionCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { getData, deleteTransaction, addTransaction, Transaction, EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/storage";
+import { getData, deleteTransaction, addTransaction, Transaction, EXPENSE_CATEGORIES, INCOME_CATEGORIES, getCurrency, CURRENCIES } from "@/lib/storage";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,9 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  
+  const currencyCode = getCurrency() || 'KMF';
+  const currency = CURRENCIES.find(c => c.code === currencyCode) || CURRENCIES[0];
 
   const [formData, setFormData] = useState({
     type: "expense" as "income" | "expense",
@@ -121,7 +124,7 @@ export default function Transactions() {
                 </div>
 
                 <div>
-                  <Label>Montant (F CFA)</Label>
+                  <Label>Montant ({currency.symbol})</Label>
                   <Input
                     type="number"
                     step="0.01"

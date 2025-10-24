@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
-import { getMonthlyStats, getFinancialAdvice } from "@/lib/storage";
+import { getMonthlyStats, getFinancialAdvice, formatAmount } from "@/lib/storage";
 import { TrendingUp, TrendingDown, Wallet, Lightbulb } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -31,13 +31,13 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 gap-4">
           <StatCard
             title="Revenus"
-            value={`${stats.totalIncome.toFixed(0)} F`}
+            value={formatAmount(stats.totalIncome)}
             icon={TrendingUp}
             trend="up"
           />
           <StatCard
             title="Dépenses"
-            value={`${stats.totalExpenses.toFixed(0)} F`}
+            value={formatAmount(stats.totalExpenses)}
             icon={TrendingDown}
             trend="down"
           />
@@ -48,7 +48,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-white/80 text-sm mb-1">Solde du mois</p>
-              <p className="text-3xl font-bold">{stats.balance.toFixed(2)} F</p>
+              <p className="text-3xl font-bold">{formatAmount(stats.balance)}</p>
             </div>
             <Wallet className="w-12 h-12 text-white/80 animate-float" />
           </div>
@@ -90,7 +90,7 @@ export default function Dashboard() {
                     >
                       <span className="capitalize font-medium">{category}</span>
                       <div className="text-right">
-                        <p className="font-bold">{amount.toFixed(2)} F</p>
+                        <p className="font-bold">{formatAmount(amount)}</p>
                         <p className="text-xs text-muted-foreground">{percentage.toFixed(0)}%</p>
                       </div>
                     </div>

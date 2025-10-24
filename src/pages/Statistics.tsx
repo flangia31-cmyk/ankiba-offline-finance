@@ -1,5 +1,5 @@
 import { Layout } from "@/components/Layout";
-import { getMonthlyStats } from "@/lib/storage";
+import { getMonthlyStats, formatAmount } from "@/lib/storage";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, PieChart } from "lucide-react";
 
@@ -27,7 +27,7 @@ export default function Statistics() {
               <TrendingUp className="w-4 h-4 text-success" />
               <span className="text-sm text-muted-foreground">Revenus</span>
             </div>
-            <p className="text-2xl font-bold">{stats.totalIncome.toFixed(0)} F</p>
+            <p className="text-2xl font-bold">{formatAmount(stats.totalIncome)}</p>
           </Card>
 
           <Card className="p-4 bg-gradient-card border-border/50">
@@ -35,7 +35,7 @@ export default function Statistics() {
               <TrendingDown className="w-4 h-4 text-destructive" />
               <span className="text-sm text-muted-foreground">Dépenses</span>
             </div>
-            <p className="text-2xl font-bold">{stats.totalExpenses.toFixed(0)} F</p>
+            <p className="text-2xl font-bold">{formatAmount(stats.totalExpenses)}</p>
           </Card>
         </div>
 
@@ -79,7 +79,7 @@ export default function Statistics() {
                         />
                       </div>
                       <span className="font-bold text-sm whitespace-nowrap">
-                        {amount.toFixed(0)} F
+                        {formatAmount(amount)}
                       </span>
                     </div>
                   </Card>
@@ -91,7 +91,7 @@ export default function Statistics() {
             <Card className="p-6 bg-gradient-primary text-white border-0 shadow-glow">
               <div className="text-center">
                 <p className="text-white/80 text-sm mb-2">Balance du mois</p>
-                <p className="text-4xl font-bold mb-1">{stats.balance.toFixed(2)} F</p>
+                <p className="text-4xl font-bold mb-1">{formatAmount(stats.balance)}</p>
                 <p className="text-white/60 text-sm">
                   {stats.balance >= 0 ? "Excédent" : "Déficit"}
                 </p>

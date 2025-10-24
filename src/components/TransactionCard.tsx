@@ -1,4 +1,4 @@
-import { Transaction } from "@/lib/storage";
+import { Transaction, formatAmount } from "@/lib/storage";
 import { Trash2, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -33,7 +33,7 @@ export const TransactionCard = ({ transaction, onDelete }: TransactionCardProps)
       
       <div className="flex items-center gap-2">
         <span className={`text-lg font-bold ${isIncome ? "text-success" : "text-destructive"}`}>
-          {isIncome ? "+" : "-"}{transaction.amount.toFixed(2)} F
+          {isIncome ? "+" : "-"}{formatAmount(transaction.amount)}
         </span>
         <Button
           variant="ghost"

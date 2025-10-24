@@ -11,23 +11,30 @@ import Statistics from "./pages/Statistics";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import BiometricLock from "./pages/BiometricLock";
+import CurrencySetup from "./pages/CurrencySetup";
 import { isNativePlatform } from "./lib/biometric";
+import { getCurrency } from "./lib/storage";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [hasCurrency, setHasCurrency] = useState(false);
 
   useEffect(() => {
-    // Vérifier si on est sur une plateforme native
+    // Vérifier si on est sur une plateforme native et si la devise est configurée
     const checkPlatform = async () => {
       const native = isNativePlatform();
+      const currency = getCurrency();
       
       // Si pas natif, déverrouiller automatiquement
       if (!native) {
         setIsUnlocked(true);
       }
+      
+      // Vérifier si la devise est configurée
+      setHasCurrency(!!currency);
       
       setIsChecking(false);
     };
@@ -38,6 +45,19 @@ const App = () => {
   // Pendant la vérification, ne rien afficher (ou un loader)
   if (isChecking) {
     return null;
+  }
+
+  // Afficher l'écran de configuration de la devise si nécessaire
+  if (!hasCurrency) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <CurrencySetup onComplete={() => setHasCurrency(true)} />
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
   }
 
   // Afficher l'écran de verrouillage biométrique si nécessaire
