@@ -65,7 +65,7 @@ export default function Profile() {
   };
 
   const handleClearData = () => {
-    saveData({ transactions: [], goals: [], monthlyBudget: 0 });
+    saveData({ transactions: [], goals: [], chargesFixes: [], monthlyBudget: 0 });
     toast({
       title: "Données effacées",
       description: "Toutes vos données ont été supprimées.",

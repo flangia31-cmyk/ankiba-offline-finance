@@ -9,6 +9,7 @@ import Transactions from "./pages/Transactions";
 import Goals from "./pages/Goals";
 import Statistics from "./pages/Statistics";
 import Profile from "./pages/Profile";
+import ChargesFixes from "./pages/ChargesFixes";
 import NotFound from "./pages/NotFound";
 import BiometricLock from "./pages/BiometricLock";
 import CurrencySetup from "./pages/CurrencySetup";
@@ -83,6 +84,7 @@ const App = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/goals" element={<Goals />} />
+            <Route path="/charges-fixes" element={<ChargesFixes />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

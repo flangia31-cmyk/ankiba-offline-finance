@@ -40,6 +40,13 @@ export interface Goal {
   createdAt: string;
 }
 
+export interface ChargeFixe {
+  id: string;
+  nomCharge: string;
+  montant: number;
+  datePaiement?: string;
+}
+
 export interface Currency {
   code: string;
   symbol: string;
@@ -59,6 +66,7 @@ export const CURRENCIES: Currency[] = [
 export interface FinancialData {
   transactions: Transaction[];
   goals: Goal[];
+  chargesFixes: ChargeFixe[];
   monthlyBudget: number;
   currency?: string; // Currency code (KMF, EUR, etc.)
 }
@@ -70,6 +78,7 @@ const CURRENCY_KEY = 'ankiba_currency';
 const defaultData: FinancialData = {
   transactions: [],
   goals: [],
+  chargesFixes: [],
   monthlyBudget: 0,
   currency: undefined,
 };
@@ -176,6 +185,38 @@ export const deleteGoal = (id: string): void => {
   saveData(data);
 };
 
+// Charges fixes operations
+export const addChargeFixe = (charge: Omit<ChargeFixe, 'id'>): ChargeFixe => {
+  const data = getData();
+  const newCharge = {
+    ...charge,
+    id: crypto.randomUUID(),
+  };
+  data.chargesFixes.push(newCharge);
+  saveData(data);
+  return newCharge;
+};
+
+export const updateChargeFixe = (id: string, updates: Partial<ChargeFixe>): void => {
+  const data = getData();
+  const chargeIndex = data.chargesFixes.findIndex(c => c.id === id);
+  if (chargeIndex !== -1) {
+    data.chargesFixes[chargeIndex] = { ...data.chargesFixes[chargeIndex], ...updates };
+    saveData(data);
+  }
+};
+
+export const deleteChargeFixe = (id: string): void => {
+  const data = getData();
+  data.chargesFixes = data.chargesFixes.filter(c => c.id !== id);
+  saveData(data);
+};
+
+export const getTotalChargesFixes = (): number => {
+  const data = getData();
+  return data.chargesFixes.reduce((sum, charge) => sum + charge.montant, 0);
+};
+
 // Financial calculations
 export const getMonthlyStats = (month?: Date) => {
   const data = getData();
@@ -196,7 +237,9 @@ export const getMonthlyStats = (month?: Date) => {
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const balance = totalIncome - totalExpenses;
+  const totalChargesFixes = getTotalChargesFixes();
+  const soldeDisponible = totalIncome - totalChargesFixes;
+  const balance = soldeDisponible - totalExpenses;
 
   // Category breakdown
   const expensesByCategory: Record<string, number> = {};
@@ -209,6 +252,8 @@ export const getMonthlyStats = (month?: Date) => {
   return {
     totalIncome,
     totalExpenses,
+    totalChargesFixes,
+    soldeDisponible,
     balance,
     expensesByCategory,
     transactions: monthTransactions,

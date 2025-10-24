@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { getMonthlyStats, getFinancialAdvice, formatAmount } from "@/lib/storage";
-import { TrendingUp, TrendingDown, Wallet, Lightbulb } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [stats, setStats] = useState(getMonthlyStats());
@@ -43,12 +44,45 @@ export default function Dashboard() {
           />
         </div>
 
+        {/* Charges Fixes Card */}
+        {stats.totalChargesFixes > 0 && (
+          <Link to="/charges-fixes">
+            <Card className="p-4 bg-gradient-card border-border/50 hover:shadow-soft transition-all">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-destructive/10">
+                    <Receipt className="w-5 h-5 text-destructive" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Charges fixes / mois</p>
+                    <p className="text-xl font-bold">{formatAmount(stats.totalChargesFixes)}</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </Link>
+        )}
+
+        {/* Solde Disponible Card */}
+        <Card className="p-4 bg-gradient-subtle border-border/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-muted-foreground text-sm mb-1">💰 Solde disponible</p>
+              <p className="text-2xl font-bold text-success">{formatAmount(stats.soldeDisponible)}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Après déduction des charges fixes
+              </p>
+            </div>
+          </div>
+        </Card>
+
         {/* Balance Card */}
         <Card className="p-6 bg-gradient-primary text-white border-0 shadow-glow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm mb-1">Solde du mois</p>
+              <p className="text-white/80 text-sm mb-1">Balance finale</p>
               <p className="text-3xl font-bold">{formatAmount(stats.balance)}</p>
+              <p className="text-white/60 text-xs mt-1">Solde disponible - Dépenses</p>
             </div>
             <Wallet className="w-12 h-12 text-white/80 animate-float" />
           </div>
