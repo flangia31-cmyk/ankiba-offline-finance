@@ -1,0 +1,8 @@
+{
+  "iconBackgroundColor": "#ffffff",
+  "iconForegroundPath": "icon.png",
+  "adaptiveIcon": {
+    "foregroundImage": "icon.png",
+    "backgroundColor": "#ffffff"
+  }
+}
