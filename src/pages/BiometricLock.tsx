@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Fingerprint, Lock, Smartphone } from "lucide-react";
-import { authenticateWithBiometric, checkBiometricAvailable, isNativePlatform } from "@/lib/biometric";
+import { authenticateWithBiometric, canUseAuthentication, isNativePlatform } from "@/lib/biometric";
 import { useToast } from "@/hooks/use-toast";
 
 interface BiometricLockProps {
@@ -11,7 +11,7 @@ interface BiometricLockProps {
 
 export default function BiometricLock({ onUnlock }: BiometricLockProps) {
   const [isChecking, setIsChecking] = useState(true);
-  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [authRequired, setAuthRequired] = useState(true);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const { toast } = useToast();
 
@@ -28,24 +28,19 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
       return;
     }
 
-    const available = await checkBiometricAvailable();
-    setBiometricAvailable(available);
+    const canAuth = await canUseAuthentication();
     setIsChecking(false);
 
-    // Si pas de sécurité configurée, débloquer automatiquement
-    if (!available) {
-      toast({
-        title: "Accès autorisé",
-        description: "Aucune sécurité configurée sur l'appareil",
-      });
+    if (!canAuth) {
+      // Pas sur une plateforme native, accès direct
       onUnlock();
       return;
     }
 
-    // Lancer l'authentification automatiquement si disponible
-    if (available) {
-      handleAuthenticate();
-    }
+    // Sur plateforme native, toujours essayer d'authentifier
+    // C'est la seule façon de savoir si une méthode de sécurité est configurée
+    setAuthRequired(true);
+    handleAuthenticate();
   };
 
   const handleAuthenticate = async () => {
@@ -59,7 +54,16 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
         description: "Bienvenue dans Ankiba !",
       });
       onUnlock();
+    } else if (result.isNotAvailable) {
+      // Aucune méthode de sécurité n'est configurée sur l'appareil
+      toast({
+        title: "Accès autorisé",
+        description: "Aucune sécurité configurée sur l'appareil",
+      });
+      setAuthRequired(false);
+      onUnlock();
     } else {
+      // Authentification échouée ou annulée
       toast({
         title: "Échec de l'authentification",
         description: result.error || "Veuillez réessayer",
@@ -88,11 +92,7 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-6">
       <Card className="w-full max-w-md p-8 text-center space-y-6 animate-scale-in">
         <div className="w-24 h-24 mx-auto rounded-full bg-gradient-primary flex items-center justify-center shadow-elegant">
-          {biometricAvailable ? (
-            <Fingerprint className="w-12 h-12 text-white" />
-          ) : (
-            <Lock className="w-12 h-12 text-white" />
-          )}
+          <Lock className="w-12 h-12 text-white" />
         </div>
 
         <div className="space-y-2">
@@ -104,41 +104,32 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
           </p>
         </div>
 
-        {biometricAvailable ? (
-          <div className="space-y-4">
-            <p className="text-muted-foreground">
-              Utilisez votre méthode de sécurité habituelle pour accéder à vos données
-            </p>
-            <p className="text-xs text-muted-foreground">
-              (Empreinte, Face ID, PIN, schéma ou mot de passe)
-            </p>
-            <Button
-              onClick={handleAuthenticate}
-              disabled={isAuthenticating}
-              className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
-              size="lg"
-            >
-              {isAuthenticating ? (
-                <>
-                  <Lock className="w-5 h-5 mr-2 animate-pulse" />
-                  Authentification...
-                </>
-              ) : (
-                <>
-                  <Fingerprint className="w-5 h-5 mr-2" />
-                  S'authentifier
-                </>
-              )}
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Aucune méthode de sécurité n'est configurée sur cet appareil.
-              Accès direct autorisé.
-            </p>
-          </div>
-        )}
+        <div className="space-y-4">
+          <p className="text-muted-foreground">
+            Utilisez votre méthode de sécurité pour accéder à vos données
+          </p>
+          <p className="text-xs text-muted-foreground">
+            (Empreinte, Face ID, PIN, schéma ou mot de passe)
+          </p>
+          <Button
+            onClick={handleAuthenticate}
+            disabled={isAuthenticating}
+            className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
+            size="lg"
+          >
+            {isAuthenticating ? (
+              <>
+                <Lock className="w-5 h-5 mr-2 animate-pulse" />
+                Authentification...
+              </>
+            ) : (
+              <>
+                <Fingerprint className="w-5 h-5 mr-2" />
+                S'authentifier
+              </>
+            )}
+          </Button>
+        </div>
 
         <div className="pt-4 border-t">
           <p className="text-xs text-muted-foreground">

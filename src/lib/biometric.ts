@@ -4,31 +4,26 @@ import { Capacitor } from '@capacitor/core';
 export interface BiometricResult {
   success: boolean;
   error?: string;
+  code?: string;
+  isNotAvailable?: boolean; // true si aucune méthode de sécurité n'est configurée
 }
 
 /**
- * Vérifie si une méthode de sécurité est disponible sur l'appareil
- * (empreinte, Face ID, PIN, schéma, mot de passe)
+ * Vérifie si une méthode d'authentification est disponible
+ * Note: On ne peut pas détecter les credentials (PIN/schéma) avant l'authentification
+ * La seule façon de savoir est d'essayer d'authentifier
  */
-export async function checkBiometricAvailable(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) {
-    return false;
-  }
-
-  try {
-    const result = await BiometricAuth.checkBiometry();
-    return result.isAvailable;
-  } catch (error) {
-    console.error('Erreur lors de la vérification de la biométrie:', error);
-    return false;
-  }
+export async function canUseAuthentication(): Promise<boolean> {
+  // Sur plateforme native, on suppose toujours qu'une méthode peut être disponible
+  // L'authentification nous dira si rien n'est configuré
+  return Capacitor.isNativePlatform();
 }
 
 /**
  * Authentifie l'utilisateur avec la méthode de sécurité configurée sur l'appareil
  * - Empreinte digitale si disponible
  * - Face ID si disponible (iOS)
- * - PIN, schéma ou mot de passe comme fallback (allowDeviceCredential: true)
+ * - PIN, schéma ou mot de passe (allowDeviceCredential: true)
  */
 export async function authenticateWithBiometric(): Promise<BiometricResult> {
   try {
@@ -43,9 +38,19 @@ export async function authenticateWithBiometric(): Promise<BiometricResult> {
 
     return { success: true };
   } catch (error: any) {
+    // Si aucune méthode de sécurité n'est configurée sur l'appareil
+    const isNotAvailable = 
+      error?.code === 'biometryNotAvailable' || 
+      error?.code === 'biometryNotEnrolled' ||
+      error?.code === 'notAvailable' ||
+      error?.message?.includes('not available') ||
+      error?.message?.includes('not enrolled');
+    
     return { 
       success: false, 
-      error: error?.message || 'Échec de l\'authentification' 
+      error: error?.message || 'Échec de l\'authentification',
+      code: error?.code,
+      isNotAvailable // Indique si aucune sécurité n'est configurée
     };
   }
 }
