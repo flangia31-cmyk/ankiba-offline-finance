@@ -17,6 +17,7 @@ export const EXPENSE_CATEGORIES = [
   'Logement',
   'Factures',
   'Éducation',
+  '💰 Épargne',
   'Autre'
 ];
 
@@ -174,7 +175,26 @@ export const updateGoal = (id: string, updates: Partial<Goal>): void => {
   const data = getData();
   const goalIndex = data.goals.findIndex(g => g.id === id);
   if (goalIndex !== -1) {
-    data.goals[goalIndex] = { ...data.goals[goalIndex], ...updates };
+    const oldGoal = data.goals[goalIndex];
+    data.goals[goalIndex] = { ...oldGoal, ...updates };
+    
+    // Si on ajoute de l'argent à l'objectif (currentAmount augmente)
+    if (updates.currentAmount && updates.currentAmount > oldGoal.currentAmount) {
+      const amountAdded = updates.currentAmount - oldGoal.currentAmount;
+      
+      // Créer une transaction de type "expense" pour déduire des revenus
+      const transaction: Transaction = {
+        id: crypto.randomUUID(),
+        type: 'expense',
+        amount: amountAdded,
+        category: '💰 Épargne',
+        description: `Ajout à l'objectif: ${oldGoal.name}`,
+        date: new Date().toISOString(),
+      };
+      
+      data.transactions.push(transaction);
+    }
+    
     saveData(data);
   }
 };

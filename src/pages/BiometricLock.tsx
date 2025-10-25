@@ -32,6 +32,16 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
     setBiometricAvailable(available);
     setIsChecking(false);
 
+    // Si pas de sécurité configurée, débloquer automatiquement
+    if (!available) {
+      toast({
+        title: "Accès autorisé",
+        description: "Aucune sécurité configurée sur l'appareil",
+      });
+      onUnlock();
+      return;
+    }
+
     // Lancer l'authentification automatiquement si disponible
     if (available) {
       handleAuthenticate();
