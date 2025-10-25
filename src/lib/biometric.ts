@@ -7,7 +7,8 @@ export interface BiometricResult {
 }
 
 /**
- * Vérifie si la biométrie est disponible sur l'appareil
+ * Vérifie si une méthode de sécurité est disponible sur l'appareil
+ * (empreinte, Face ID, PIN, schéma, mot de passe)
  */
 export async function checkBiometricAvailable(): Promise<boolean> {
   if (!Capacitor.isNativePlatform()) {
@@ -24,17 +25,20 @@ export async function checkBiometricAvailable(): Promise<boolean> {
 }
 
 /**
- * Authentifie l'utilisateur avec la biométrie
+ * Authentifie l'utilisateur avec la méthode de sécurité configurée sur l'appareil
+ * - Empreinte digitale si disponible
+ * - Face ID si disponible (iOS)
+ * - PIN, schéma ou mot de passe comme fallback (allowDeviceCredential: true)
  */
 export async function authenticateWithBiometric(): Promise<BiometricResult> {
   try {
     await BiometricAuth.authenticate({
       reason: "Authentifiez-vous pour accéder à Ankiba",
       cancelTitle: "Annuler",
-      allowDeviceCredential: true,
+      allowDeviceCredential: true, // ✅ Permet PIN, schéma, mot de passe en plus de la biométrie
       iosFallbackTitle: "Utiliser le code",
       androidTitle: "Authentification Ankiba",
-      androidSubtitle: "Utilisez votre empreinte ou Face ID",
+      androidSubtitle: "Utilisez votre méthode de sécurité habituelle",
     });
 
     return { success: true };

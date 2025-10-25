@@ -107,7 +107,10 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
         {biometricAvailable ? (
           <div className="space-y-4">
             <p className="text-muted-foreground">
-              Authentifiez-vous pour accéder à vos données financières
+              Utilisez votre méthode de sécurité habituelle pour accéder à vos données
+            </p>
+            <p className="text-xs text-muted-foreground">
+              (Empreinte, Face ID, PIN, schéma ou mot de passe)
             </p>
             <Button
               onClick={handleAuthenticate}
@@ -131,16 +134,9 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              L'authentification biométrique n'est pas disponible sur cet appareil.
-              L'application ne peut être utilisée que sur des appareils natifs avec biométrie activée.
+              Aucune méthode de sécurité n'est configurée sur cet appareil.
+              Accès direct autorisé.
             </p>
-            <Button
-              onClick={() => window.location.reload()}
-              variant="outline"
-              className="w-full"
-            >
-              Réessayer
-            </Button>
           </div>
         )}
 
