@@ -1,56 +1,64 @@
-import { BiometricAuth } from '@aparajita/capacitor-biometric-auth';
+import { BiometricAuth, AndroidBiometryStrength } from '@aparajita/capacitor-biometric-auth';
 import { Capacitor } from '@capacitor/core';
 
 export interface BiometricResult {
   success: boolean;
   error?: string;
   code?: string;
-  isNotAvailable?: boolean; // true si aucune méthode de sécurité n'est configurée
+  isNotAvailable?: boolean;
 }
 
 /**
- * Vérifie si une méthode d'authentification est disponible
- * Note: On ne peut pas détecter les credentials (PIN/schéma) avant l'authentification
- * La seule façon de savoir est d'essayer d'authentifier
+ * Vérifie si l'appareil a une méthode de sécurité configurée
+ * Vérifie à la fois la biométrie ET les device credentials (PIN/schéma/password)
  */
 export async function canUseAuthentication(): Promise<boolean> {
-  // Sur plateforme native, on suppose toujours qu'une méthode peut être disponible
-  // L'authentification nous dira si rien n'est configuré
-  return Capacitor.isNativePlatform();
+  if (!Capacitor.isNativePlatform()) {
+    return false;
+  }
+
+  try {
+    const result = await BiometricAuth.checkBiometry();
+    // deviceIsSecure = true si PIN, pattern, password, ou biométrie configuré
+    return result.isAvailable || result.deviceIsSecure;
+  } catch (error) {
+    console.error('Erreur lors de la vérification de la sécurité:', error);
+    return false;
+  }
 }
 
 /**
  * Authentifie l'utilisateur avec la méthode de sécurité configurée sur l'appareil
- * - Empreinte digitale si disponible
- * - Face ID si disponible (iOS)
- * - PIN, schéma ou mot de passe (allowDeviceCredential: true)
+ * S'adapte automatiquement à la méthode disponible :
+ * - Empreinte digitale, Face ID, ou Iris (biométrie)
+ * - PIN, schéma, ou mot de passe (device credentials)
  */
 export async function authenticateWithBiometric(): Promise<BiometricResult> {
   try {
     await BiometricAuth.authenticate({
       reason: "Authentifiez-vous pour accéder à Ankiba",
       cancelTitle: "Annuler",
-      allowDeviceCredential: true, // ✅ Permet PIN, schéma, mot de passe en plus de la biométrie
+      allowDeviceCredential: true, // ✅ Active PIN, schéma, mot de passe
       iosFallbackTitle: "Utiliser le code",
       androidTitle: "Authentification Ankiba",
       androidSubtitle: "Utilisez votre méthode de sécurité habituelle",
+      androidBiometryStrength: AndroidBiometryStrength.weak, // ✅ Accepte tous les types de biométrie
     });
 
     return { success: true };
   } catch (error: any) {
-    // Si aucune méthode de sécurité n'est configurée sur l'appareil
+    // Aucune méthode de sécurité configurée
     const isNotAvailable = 
       error?.code === 'biometryNotAvailable' || 
       error?.code === 'biometryNotEnrolled' ||
-      error?.code === 'notAvailable' ||
-      error?.message?.includes('not available') ||
-      error?.message?.includes('not enrolled');
+      error?.code === 'passcodeNotSet' ||
+      error?.code === 'noDeviceCredential';
     
     return { 
       success: false, 
       error: error?.message || 'Échec de l\'authentification',
       code: error?.code,
-      isNotAvailable // Indique si aucune sécurité n'est configurée
+      isNotAvailable
     };
   }
 }

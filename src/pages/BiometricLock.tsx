@@ -22,7 +22,6 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
   const checkAvailability = async () => {
     setIsChecking(true);
     
-    // Si on n'est pas sur une plateforme native, on déverrouille automatiquement
     if (!isNativePlatform()) {
       onUnlock();
       return;
@@ -32,13 +31,16 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
     setIsChecking(false);
 
     if (!canAuth) {
-      // Pas sur une plateforme native, accès direct
+      // Aucune sécurité configurée, accès direct
+      toast({
+        title: "Accès autorisé",
+        description: "Aucune sécurité configurée sur l'appareil",
+      });
       onUnlock();
       return;
     }
 
-    // Sur plateforme native, toujours essayer d'authentifier
-    // C'est la seule façon de savoir si une méthode de sécurité est configurée
+    // Une méthode de sécurité est disponible, demander l'authentification
     setAuthRequired(true);
     handleAuthenticate();
   };
