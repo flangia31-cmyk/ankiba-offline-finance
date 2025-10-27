@@ -27,16 +27,25 @@ export async function authenticateWithBiometric(): Promise<BiometricResult> {
     await BiometricAuth.authenticate({
       reason: "Authentifiez-vous pour accéder à Ankiba",
       cancelTitle: "Annuler",
-      allowDeviceCredential: true, // ✅ Active PIN, schéma, mot de passe
+      allowDeviceCredential: true,
       iosFallbackTitle: "Utiliser le code",
-      androidTitle: "Authentification Ankiba",
-      androidSubtitle: "Utilisez votre méthode de sécurité habituelle",
-      androidBiometryStrength: AndroidBiometryStrength.weak, // ✅ Accepte tous les types de biométrie
+      androidTitle: "Authentification requise",
+      androidSubtitle: "Utilisez votre sécurité habituelle",
+      androidConfirmationRequired: false,
     });
 
     return { success: true };
   } catch (error: any) {
-    // Aucune méthode de sécurité configurée
+    // Utilisateur a annulé
+    if (error?.code === 'userCancel') {
+      return { 
+        success: false, 
+        error: 'Authentification annulée',
+        code: error?.code
+      };
+    }
+    
+    // Aucune méthode de sécurité configurée sur l'appareil
     const isNotAvailable = 
       error?.code === 'biometryNotAvailable' || 
       error?.code === 'biometryNotEnrolled' ||
