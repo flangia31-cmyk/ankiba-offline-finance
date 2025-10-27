@@ -34,7 +34,12 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
     handleAuthenticate();
   };
 
-  const handleAuthenticate = async () => {
+  const handleAuthenticate = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     setIsAuthenticating(true);
     
     const result = await authenticateWithBiometric();
@@ -103,7 +108,10 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
             (Empreinte, Face ID, PIN, schéma ou mot de passe)
           </p>
           <Button
-            onClick={handleAuthenticate}
+            onClick={(e) => {
+              e.preventDefault();
+              handleAuthenticate();
+            }}
             disabled={isAuthenticating}
             className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
             size="lg"
