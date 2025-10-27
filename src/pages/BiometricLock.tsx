@@ -27,19 +27,25 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
       return;
     }
 
-    // Sur plateforme native, on essaie directement d'authentifier
-    // L'API native affichera automatiquement la méthode disponible (empreinte, PIN, schéma, mot de passe)
+    const canAuth = await canUseAuthentication();
     setIsChecking(false);
+
+    if (!canAuth) {
+      // Aucune sécurité configurée, accès direct
+      toast({
+        title: "Accès autorisé",
+        description: "Aucune sécurité configurée sur l'appareil",
+      });
+      onUnlock();
+      return;
+    }
+
+    // Une méthode de sécurité est disponible, demander l'authentification
     setAuthRequired(true);
     handleAuthenticate();
   };
 
-  const handleAuthenticate = async (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    
+  const handleAuthenticate = async () => {
     setIsAuthenticating(true);
     
     const result = await authenticateWithBiometric();
@@ -108,10 +114,7 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
             (Empreinte, Face ID, PIN, schéma ou mot de passe)
           </p>
           <Button
-            onClick={(e) => {
-              e.preventDefault();
-              handleAuthenticate();
-            }}
+            onClick={handleAuthenticate}
             disabled={isAuthenticating}
             className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
             size="lg"
