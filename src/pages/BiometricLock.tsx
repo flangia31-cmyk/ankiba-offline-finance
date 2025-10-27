@@ -27,20 +27,9 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
       return;
     }
 
-    const canAuth = await canUseAuthentication();
+    // Sur plateforme native, on essaie directement d'authentifier
+    // L'API native affichera automatiquement la méthode disponible (empreinte, PIN, schéma, mot de passe)
     setIsChecking(false);
-
-    if (!canAuth) {
-      // Aucune sécurité configurée, accès direct
-      toast({
-        title: "Accès autorisé",
-        description: "Aucune sécurité configurée sur l'appareil",
-      });
-      onUnlock();
-      return;
-    }
-
-    // Une méthode de sécurité est disponible, demander l'authentification
     setAuthRequired(true);
     handleAuthenticate();
   };
