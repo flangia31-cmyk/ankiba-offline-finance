@@ -9,11 +9,22 @@ export interface BiometricResult {
 }
 
 /**
- * Vérifie si on est sur une plateforme native
- * Note: La vérification réelle de la disponibilité se fait lors de l'authentification
+ * Vérifie si l'appareil a une méthode de sécurité configurée
+ * Vérifie à la fois la biométrie ET les device credentials (PIN/schéma/password)
  */
 export async function canUseAuthentication(): Promise<boolean> {
-  return Capacitor.isNativePlatform();
+  if (!Capacitor.isNativePlatform()) {
+    return false;
+  }
+
+  try {
+    const result = await BiometricAuth.checkBiometry();
+    // deviceIsSecure = true si PIN, pattern, password, ou biométrie configuré
+    return result.isAvailable || result.deviceIsSecure;
+  } catch (error) {
+    console.error('Erreur lors de la vérification de la sécurité:', error);
+    return false;
+  }
 }
 
 /**
@@ -27,25 +38,16 @@ export async function authenticateWithBiometric(): Promise<BiometricResult> {
     await BiometricAuth.authenticate({
       reason: "Authentifiez-vous pour accéder à Ankiba",
       cancelTitle: "Annuler",
-      allowDeviceCredential: true,
+      allowDeviceCredential: true, // ✅ Active PIN, schéma, mot de passe
       iosFallbackTitle: "Utiliser le code",
-      androidTitle: "Authentification requise",
-      androidSubtitle: "Utilisez votre sécurité habituelle",
-      androidConfirmationRequired: false,
+      androidTitle: "Authentification Ankiba",
+      androidSubtitle: "Utilisez votre méthode de sécurité habituelle",
+      androidBiometryStrength: AndroidBiometryStrength.weak, // ✅ Accepte tous les types de biométrie
     });
 
     return { success: true };
   } catch (error: any) {
-    // Utilisateur a annulé
-    if (error?.code === 'userCancel') {
-      return { 
-        success: false, 
-        error: 'Authentification annulée',
-        code: error?.code
-      };
-    }
-    
-    // Aucune méthode de sécurité configurée sur l'appareil
+    // Aucune méthode de sécurité configurée
     const isNotAvailable = 
       error?.code === 'biometryNotAvailable' || 
       error?.code === 'biometryNotEnrolled' ||
