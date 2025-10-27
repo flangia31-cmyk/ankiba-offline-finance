@@ -1,9 +1,10 @@
 import { Goal, formatAmount } from "@/lib/storage";
-import { Target, Trash2 } from "lucide-react";
+import { Target, Trash2, TrendingUp, Calendar, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { calculateSavingsAdvice, getBestAdvice } from "@/lib/savingsAdvice";
 
 interface GoalCardProps {
   goal: Goal;
@@ -14,6 +15,8 @@ interface GoalCardProps {
 export const GoalCard = ({ goal, onDelete, onAddAmount }: GoalCardProps) => {
   const progress = (goal.currentAmount / goal.targetAmount) * 100;
   const remaining = goal.targetAmount - goal.currentAmount;
+  const advice = calculateSavingsAdvice(goal.targetAmount, goal.currentAmount, goal.deadline);
+  const bestAdvice = advice ? getBestAdvice(advice) : null;
   
   return (
     <div className="p-6 rounded-2xl bg-gradient-card border border-border/50 shadow-soft hover:shadow-glow transition-all animate-fade-in">
@@ -60,10 +63,61 @@ export const GoalCard = ({ goal, onDelete, onAddAmount }: GoalCardProps) => {
           </Button>
         </div>
         
-        {remaining > 0 && (
-          <p className="text-sm text-muted-foreground text-center pt-2 border-t border-border/50">
-            Plus que {formatAmount(remaining)} à économiser !
-          </p>
+        {remaining > 0 && advice && (
+          <div className="pt-3 border-t border-border/50 space-y-3">
+            <p className="text-sm text-muted-foreground text-center">
+              Plus que {formatAmount(remaining)} à économiser !
+            </p>
+            
+            {/* Conseil principal */}
+            {bestAdvice && (
+              <div className={`p-4 rounded-xl ${advice.isUrgent ? 'bg-destructive/10 border border-destructive/20' : 'bg-primary/10 border border-primary/20'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className={`w-4 h-4 ${advice.isUrgent ? 'text-destructive' : 'text-primary'}`} />
+                  <span className="text-sm font-semibold">{advice.message}</span>
+                </div>
+                <p className="text-lg font-bold">
+                  {formatAmount(bestAdvice.amount)} {bestAdvice.period}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  pour atteindre votre objectif à temps
+                </p>
+              </div>
+            )}
+            
+            {/* Détails des options */}
+            {advice.daysLeft > 1 && (
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div className="p-2 rounded-lg bg-background/50 text-center">
+                  <Calendar className="w-3 h-3 mx-auto mb-1 text-muted-foreground" />
+                  <p className="font-semibold">{formatAmount(advice.perDay)}</p>
+                  <p className="text-muted-foreground">par jour</p>
+                </div>
+                {advice.daysLeft >= 7 && (
+                  <div className="p-2 rounded-lg bg-background/50 text-center">
+                    <Calendar className="w-3 h-3 mx-auto mb-1 text-muted-foreground" />
+                    <p className="font-semibold">{formatAmount(advice.perWeek)}</p>
+                    <p className="text-muted-foreground">par semaine</p>
+                  </div>
+                )}
+                {advice.daysLeft >= 30 && (
+                  <div className="p-2 rounded-lg bg-background/50 text-center">
+                    <DollarSign className="w-3 h-3 mx-auto mb-1 text-muted-foreground" />
+                    <p className="font-semibold">{formatAmount(advice.perMonth)}</p>
+                    <p className="text-muted-foreground">par mois</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        
+        {remaining <= 0 && (
+          <div className="pt-3 border-t border-border/50">
+            <p className="text-center text-sm font-semibold text-green-600">
+              🎉 Objectif atteint ! Félicitations !
+            </p>
+          </div>
         )}
       </div>
     </div>
