@@ -21,21 +21,21 @@ export default function Statistics() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="p-4 bg-gradient-card border-border/50">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <Card className="p-3 sm:p-4 bg-gradient-card border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-success" />
-              <span className="text-sm text-muted-foreground">Revenus</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Revenus</span>
             </div>
-            <p className="text-2xl font-bold">{formatAmount(stats.totalIncome)}</p>
+            <p className="text-lg sm:text-2xl font-bold truncate">{formatAmount(stats.totalIncome)}</p>
           </Card>
 
-          <Card className="p-4 bg-gradient-card border-border/50">
+          <Card className="p-3 sm:p-4 bg-gradient-card border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-4 h-4 text-destructive" />
-              <span className="text-sm text-muted-foreground">Dépenses</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Dépenses</span>
             </div>
-            <p className="text-2xl font-bold">{formatAmount(stats.totalExpenses)}</p>
+            <p className="text-lg sm:text-2xl font-bold truncate">{formatAmount(stats.totalExpenses)}</p>
           </Card>
         </div>
 
