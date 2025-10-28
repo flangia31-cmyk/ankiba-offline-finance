@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
+import { OnboardingGuide } from "@/components/OnboardingGuide";
 import { getMonthlyStats, getFinancialAdvice, formatAmount } from "@/lib/storage";
 import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -17,6 +18,7 @@ export default function Dashboard() {
 
   return (
     <Layout>
+      <OnboardingGuide />
       <div className="p-6 space-y-6 animate-fade-in">
         {/* Header */}
         <div className="space-y-2">
