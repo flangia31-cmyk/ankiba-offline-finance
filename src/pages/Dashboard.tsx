@@ -23,7 +23,7 @@ export default function Dashboard() {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Ankiba
+            AKBWallet
           </h1>
           <p className="text-muted-foreground">
             Votre conseiller financier personnel

@@ -26,11 +26,11 @@ interface OnboardingStep {
   tips: string[];
 }
 
-const ONBOARDING_KEY = "ankiba_onboarding_completed";
+const ONBOARDING_KEY = "akbwallet_onboarding_completed";
 
 const steps: OnboardingStep[] = [
   {
-    title: "Bienvenue sur Ankiba 👋",
+    title: "Bienvenue sur AKBWallet 👋",
     description: "Votre conseiller financier personnel qui vous aide à gérer votre argent intelligemment.",
     icon: <Wallet className="w-12 h-12 text-primary" />,
     tips: [

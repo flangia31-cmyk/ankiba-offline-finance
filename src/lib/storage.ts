@@ -1,4 +1,4 @@
-// Local storage management for Ankiba
+// Local storage management for AKBWallet
 export interface Transaction {
   id: string;
   type: 'income' | 'expense';
@@ -72,8 +72,8 @@ export interface FinancialData {
   currency?: string; // Currency code (KMF, EUR, etc.)
 }
 
-const STORAGE_KEY = 'ankiba_data';
-const CURRENCY_KEY = 'ankiba_currency';
+const STORAGE_KEY = 'akbwallet_data';
+const CURRENCY_KEY = 'akbwallet_currency';
 
 // Initialize default data
 const defaultData: FinancialData = {

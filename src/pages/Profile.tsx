@@ -26,7 +26,7 @@ export default function Profile() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `ankiba-backup-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `akbwallet-backup-${new Date().toISOString().split("T")[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -84,7 +84,7 @@ export default function Profile() {
         {/* App Info */}
         <Card className="p-6 bg-gradient-primary text-white border-0 shadow-glow">
           <div className="text-center space-y-2">
-            <h2 className="text-3xl font-bold">Ankiba</h2>
+            <h2 className="text-3xl font-bold">AKBWallet</h2>
             <p className="text-white/80">Votre conseiller financier personnel</p>
             <p className="text-white/60 text-sm">Version 1.0.0</p>
           </div>
@@ -182,7 +182,7 @@ export default function Profile() {
         <Card className="p-4 bg-gradient-card border-border/50">
           <h3 className="font-semibold mb-2">À propos</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Ankiba est votre assistant personnel pour la gestion financière. 
+            AKBWallet est votre assistant personnel pour la gestion financière. 
             Simple, sécurisé et 100% hors ligne, il vous aide à suivre vos dépenses, 
             atteindre vos objectifs d'épargne et recevoir des conseils personnalisés.
           </p>
