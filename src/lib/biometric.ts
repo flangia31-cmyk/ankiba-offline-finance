@@ -43,11 +43,11 @@ export async function authenticateWithBiometric(): Promise<BiometricResult> {
     
     // Configuration de l'authentification
     const authConfig = {
-      reason: "Authentifiez-vous pour accéder à AKBWallet",
+      reason: "Authentifiez-vous pour accéder à Ankiba",
       cancelTitle: "Annuler",
       allowDeviceCredential: true, // ✅ Permet PIN/schéma/mot de passe
       iosFallbackTitle: "Utiliser le code",
-      androidTitle: "AKBWallet",
+      androidTitle: "Ankiba",
       androidSubtitle: "Authentification requise",
       androidConfirmationRequired: false, // ✅ Pas de confirmation supplémentaire
       androidMaxAttempts: -1, // ✅ Pas de limite de tentatives

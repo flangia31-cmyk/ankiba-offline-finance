@@ -23,7 +23,7 @@ export default function Dashboard() {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            AKBWallet
+            Ankiba
           </h1>
           <p className="text-muted-foreground">
             Votre conseiller financier personnel
@@ -33,13 +33,13 @@ export default function Dashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <StatCard
-            title="Revenus"
+            title="Revenus totaux"
             value={formatAmount(stats.totalIncome)}
             icon={TrendingUp}
             trend="up"
           />
           <StatCard
-            title="Dépenses"
+            title="Dépenses totales"
             value={formatAmount(stats.totalExpenses)}
             icon={TrendingDown}
             trend="down"

@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.ankiba.app',
-  appName: 'AKBWallet',
+  appName: 'Ankiba',
   webDir: 'dist',
   android: {
     minSdkVersion: 22,

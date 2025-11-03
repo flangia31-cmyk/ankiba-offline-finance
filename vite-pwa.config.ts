@@ -4,8 +4,8 @@ export const pwaConfig = VitePWA({
   registerType: 'autoUpdate',
   includeAssets: ['favicon.ico'],
   manifest: {
-    name: 'AKBWallet - Conseiller financier personnel',
-    short_name: 'AKBWallet',
+    name: 'Ankiba - Conseiller financier personnel',
+    short_name: 'Ankiba',
     description: 'Gérez vos finances personnelles facilement. 100% hors ligne et sécurisé.',
     theme_color: '#06b6d4',
     background_color: '#f5f7fa',

@@ -53,7 +53,7 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
     if (result.success) {
       toast({
         title: "Authentification réussie",
-        description: "Bienvenue dans AKBWallet !",
+        description: "Bienvenue dans Ankiba !",
       });
       onUnlock();
     } else if (result.isNotAvailable) {
@@ -99,7 +99,7 @@ export default function BiometricLock({ onUnlock }: BiometricLockProps) {
 
         <div className="space-y-2">
           <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            AKBWallet
+            Ankiba
           </h1>
           <p className="text-sm text-muted-foreground">
             Votre conseiller financier personnel

@@ -110,7 +110,7 @@ export default function ChargesFixes() {
             Charges fixes
           </h1>
           <p className="text-muted-foreground text-sm">
-            Ajoutez vos dépenses mensuelles obligatoires. AKBWallet les déduira automatiquement de vos revenus chaque mois.
+            Ajoutez vos dépenses mensuelles obligatoires. Ankiba les déduira automatiquement de vos revenus chaque mois.
           </p>
         </div>
 

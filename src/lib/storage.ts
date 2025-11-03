@@ -1,4 +1,4 @@
-// Local storage management for AKBWallet
+// Local storage management for Ankiba
 export interface Transaction {
   id: string;
   type: 'income' | 'expense';
@@ -72,8 +72,8 @@ export interface FinancialData {
   currency?: string; // Currency code (KMF, EUR, etc.)
 }
 
-const STORAGE_KEY = 'akbwallet_data';
-const CURRENCY_KEY = 'akbwallet_currency';
+const STORAGE_KEY = 'ankiba_data';
+const CURRENCY_KEY = 'ankiba_currency';
 
 // Initialize default data
 const defaultData: FinancialData = {
@@ -238,36 +238,47 @@ export const getTotalChargesFixes = (): number => {
 };
 
 // Financial calculations
+// Les revenus sont cumulatifs (de tous les temps), pas mensuels
+// Seules les charges fixes sont mensuelles
 export const getMonthlyStats = (month?: Date) => {
   const data = getData();
-  const targetMonth = month || new Date();
-  const monthStart = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1);
-  const monthEnd = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0);
-
-  const monthTransactions = data.transactions.filter(t => {
-    const transDate = new Date(t.date);
-    return transDate >= monthStart && transDate <= monthEnd;
-  });
-
-  const totalIncome = monthTransactions
+  
+  // Calcul du total des revenus (tous les temps)
+  const totalIncome = data.transactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalExpenses = monthTransactions
+  // Calcul du total des dépenses (tous les temps)
+  const totalExpenses = data.transactions
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0);
 
+  // Les charges fixes sont mensuelles
   const totalChargesFixes = getTotalChargesFixes();
+  
+  // Solde disponible = Revenus totaux - Charges fixes mensuelles
   const soldeDisponible = totalIncome - totalChargesFixes;
+  
+  // Balance finale = Solde disponible - Dépenses totales
   const balance = soldeDisponible - totalExpenses;
 
-  // Category breakdown
+  // Category breakdown (pour toutes les dépenses)
   const expensesByCategory: Record<string, number> = {};
-  monthTransactions
+  data.transactions
     .filter(t => t.type === 'expense')
     .forEach(t => {
       expensesByCategory[t.category] = (expensesByCategory[t.category] || 0) + t.amount;
     });
+
+  // Pour les transactions, on peut toujours filtrer par mois si nécessaire
+  const targetMonth = month || new Date();
+  const monthStart = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1);
+  const monthEnd = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0);
+  
+  const monthTransactions = data.transactions.filter(t => {
+    const transDate = new Date(t.date);
+    return transDate >= monthStart && transDate <= monthEnd;
+  });
 
   return {
     totalIncome,

@@ -25,7 +25,7 @@ export default function Statistics() {
           <Card className="p-3 sm:p-4 bg-gradient-card border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-success" />
-              <span className="text-xs sm:text-sm text-muted-foreground">Revenus</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Revenus totaux</span>
             </div>
             <p className="text-lg sm:text-2xl font-bold truncate">{formatAmount(stats.totalIncome)}</p>
           </Card>
@@ -33,7 +33,7 @@ export default function Statistics() {
           <Card className="p-3 sm:p-4 bg-gradient-card border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-4 h-4 text-destructive" />
-              <span className="text-xs sm:text-sm text-muted-foreground">Dépenses</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Dépenses totales</span>
             </div>
             <p className="text-lg sm:text-2xl font-bold truncate">{formatAmount(stats.totalExpenses)}</p>
           </Card>
@@ -90,7 +90,7 @@ export default function Statistics() {
             {/* Summary */}
             <Card className="p-6 bg-gradient-primary text-white border-0 shadow-glow">
               <div className="text-center">
-                <p className="text-white/80 text-sm mb-2">Balance du mois</p>
+                <p className="text-white/80 text-sm mb-2">Balance totale</p>
                 <p className="text-4xl font-bold mb-1">{formatAmount(stats.balance)}</p>
                 <p className="text-white/60 text-sm">
                   {stats.balance >= 0 ? "Excédent" : "Déficit"}

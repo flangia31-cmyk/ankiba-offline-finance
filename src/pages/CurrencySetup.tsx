@@ -38,7 +38,7 @@ export default function CurrencySetup({ onComplete }: CurrencySetupProps) {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Bienvenue dans AKBWallet 👋
+            Bienvenue dans Ankiba 👋
           </h1>
           <p className="text-muted-foreground">
             Avant de commencer, choisissez votre devise principale :
