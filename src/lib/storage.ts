@@ -56,12 +56,63 @@ export interface Currency {
 }
 
 export const CURRENCIES: Currency[] = [
+  // Afrique
   { code: 'KMF', symbol: 'FC', name: 'Franc comorien', flag: '🇰🇲' },
   { code: 'MGA', symbol: 'Ar', name: 'Ariary malgache', flag: '🇲🇬' },
-  { code: 'EUR', symbol: '€', name: 'Euro', flag: '🇪🇺' },
-  { code: 'USD', symbol: '$', name: 'Dollar américain', flag: '🇺🇸' },
-  { code: 'GBP', symbol: '£', name: 'Livre sterling', flag: '🇬🇧' },
   { code: 'ZAR', symbol: 'R', name: 'Rand sud-africain', flag: '🇿🇦' },
+  { code: 'EGP', symbol: 'E£', name: 'Livre égyptienne', flag: '🇪🇬' },
+  { code: 'NGN', symbol: '₦', name: 'Naira nigérian', flag: '🇳🇬' },
+  { code: 'KES', symbol: 'KSh', name: 'Shilling kényan', flag: '🇰🇪' },
+  { code: 'MAD', symbol: 'DH', name: 'Dirham marocain', flag: '🇲🇦' },
+  { code: 'TND', symbol: 'DT', name: 'Dinar tunisien', flag: '🇹🇳' },
+  { code: 'XOF', symbol: 'CFA', name: 'Franc CFA (BCEAO)', flag: '🌍' },
+  { code: 'XAF', symbol: 'FCFA', name: 'Franc CFA (BEAC)', flag: '🌍' },
+  
+  // Europe
+  { code: 'EUR', symbol: '€', name: 'Euro', flag: '🇪🇺' },
+  { code: 'GBP', symbol: '£', name: 'Livre sterling', flag: '🇬🇧' },
+  { code: 'CHF', symbol: 'CHF', name: 'Franc suisse', flag: '🇨🇭' },
+  { code: 'SEK', symbol: 'kr', name: 'Couronne suédoise', flag: '🇸🇪' },
+  { code: 'NOK', symbol: 'kr', name: 'Couronne norvégienne', flag: '🇳🇴' },
+  { code: 'DKK', symbol: 'kr', name: 'Couronne danoise', flag: '🇩🇰' },
+  { code: 'PLN', symbol: 'zł', name: 'Zloty polonais', flag: '🇵🇱' },
+  { code: 'CZK', symbol: 'Kč', name: 'Couronne tchèque', flag: '🇨🇿' },
+  { code: 'RUB', symbol: '₽', name: 'Rouble russe', flag: '🇷🇺' },
+  { code: 'TRY', symbol: '₺', name: 'Livre turque', flag: '🇹🇷' },
+  
+  // Amérique
+  { code: 'USD', symbol: '$', name: 'Dollar américain', flag: '🇺🇸' },
+  { code: 'CAD', symbol: 'C$', name: 'Dollar canadien', flag: '🇨🇦' },
+  { code: 'MXN', symbol: 'MX$', name: 'Peso mexicain', flag: '🇲🇽' },
+  { code: 'BRL', symbol: 'R$', name: 'Real brésilien', flag: '🇧🇷' },
+  { code: 'ARS', symbol: 'AR$', name: 'Peso argentin', flag: '🇦🇷' },
+  { code: 'CLP', symbol: 'CL$', name: 'Peso chilien', flag: '🇨🇱' },
+  { code: 'COP', symbol: 'COL$', name: 'Peso colombien', flag: '🇨🇴' },
+  
+  // Asie
+  { code: 'CNY', symbol: '¥', name: 'Yuan chinois', flag: '🇨🇳' },
+  { code: 'JPY', symbol: '¥', name: 'Yen japonais', flag: '🇯🇵' },
+  { code: 'INR', symbol: '₹', name: 'Roupie indienne', flag: '🇮🇳' },
+  { code: 'KRW', symbol: '₩', name: 'Won sud-coréen', flag: '🇰🇷' },
+  { code: 'SGD', symbol: 'S$', name: 'Dollar de Singapour', flag: '🇸🇬' },
+  { code: 'HKD', symbol: 'HK$', name: 'Dollar de Hong Kong', flag: '🇭🇰' },
+  { code: 'THB', symbol: '฿', name: 'Baht thaïlandais', flag: '🇹🇭' },
+  { code: 'MYR', symbol: 'RM', name: 'Ringgit malaisien', flag: '🇲🇾' },
+  { code: 'IDR', symbol: 'Rp', name: 'Roupie indonésienne', flag: '🇮🇩' },
+  { code: 'PHP', symbol: '₱', name: 'Peso philippin', flag: '🇵🇭' },
+  { code: 'VND', symbol: '₫', name: 'Dong vietnamien', flag: '🇻🇳' },
+  { code: 'PKR', symbol: '₨', name: 'Roupie pakistanaise', flag: '🇵🇰' },
+  { code: 'BDT', symbol: '৳', name: 'Taka bangladais', flag: '🇧🇩' },
+  
+  // Moyen-Orient
+  { code: 'SAR', symbol: 'SR', name: 'Riyal saoudien', flag: '🇸🇦' },
+  { code: 'AED', symbol: 'DH', name: 'Dirham des EAU', flag: '🇦🇪' },
+  { code: 'ILS', symbol: '₪', name: 'Shekel israélien', flag: '🇮🇱' },
+  { code: 'QAR', symbol: 'QR', name: 'Riyal qatarien', flag: '🇶🇦' },
+  
+  // Océanie
+  { code: 'AUD', symbol: 'A$', name: 'Dollar australien', flag: '🇦🇺' },
+  { code: 'NZD', symbol: 'NZ$', name: 'Dollar néo-zélandais', flag: '🇳🇿' },
 ];
 
 export interface FinancialData {
