@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Upload, Trash2, Lock, Info } from "lucide-react";
+import { Download, Upload, Trash2, Lock, Info, Palette } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -89,6 +90,26 @@ export default function Profile() {
             <p className="text-white/60 text-sm">Version 1.0.0</p>
           </div>
         </Card>
+
+        {/* Appearance */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Palette className="w-5 h-5" />
+            Apparence
+          </h2>
+          
+          <Card className="p-4 bg-gradient-card border-border/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium mb-1">Thème</p>
+                <p className="text-sm text-muted-foreground">
+                  Basculer entre le mode clair et sombre
+                </p>
+              </div>
+              <ThemeToggle />
+            </div>
+          </Card>
+        </div>
 
         {/* Security */}
         <div className="space-y-3">
