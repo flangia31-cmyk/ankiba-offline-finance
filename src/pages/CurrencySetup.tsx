@@ -49,7 +49,17 @@ export default function CurrencySetup({ onComplete }: CurrencySetupProps) {
         <div className="space-y-4">
           <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
             <SelectTrigger className="w-full h-14 text-lg border-border/50 bg-background/50">
-              <SelectValue placeholder="Sélectionnez votre devise" />
+              <SelectValue placeholder="Sélectionnez votre devise">
+                {selectedCurrency && (() => {
+                  const currency = CURRENCIES.find(c => c.code === selectedCurrency);
+                  return currency ? (
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{currency.flag}</span>
+                      <span>{currency.name} ({currency.symbol})</span>
+                    </div>
+                  ) : null;
+                })()}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {CURRENCIES.map((currency) => (
