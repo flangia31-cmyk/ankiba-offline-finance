@@ -1,4 +1,4 @@
-import { Home, Receipt, Target, BarChart3, FileText } from "lucide-react";
+import { Home, Receipt, Target, BarChart3, FileText, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,7 @@ const navigation = [
   { name: "Objectifs", path: "/goals", icon: Target },
   { name: "Charges", path: "/charges-fixes", icon: FileText },
   { name: "Stats", path: "/statistics", icon: BarChart3 },
+  { name: "Profil", path: "/profile", icon: User },
 ];
 
 export const BottomNav = () => {
