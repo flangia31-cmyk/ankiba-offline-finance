@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Upload, Trash2, Lock, Info, Palette } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Download, Upload, Trash2, Lock, Info, Palette, Mail } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,9 +20,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Profile() {
   const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
 
   const handleExport = () => {
     const data = exportData();
@@ -63,6 +77,47 @@ export default function Profile() {
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleEmailBackup = async () => {
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      toast({
+        title: "Email invalide",
+        description: "Veuillez entrer une adresse email valide.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    try {
+      const backupData = exportData();
+      
+      const { data, error } = await supabase.functions.invoke('send-backup-email', {
+        body: { 
+          email: email,
+          backupData: backupData
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Sauvegarde envoyée",
+        description: `Vos données ont été envoyées à ${email}. Vérifiez votre boîte mail.`,
+      });
+      setIsEmailDialogOpen(false);
+      setEmail("");
+    } catch (error: any) {
+      console.error("Erreur lors de l'envoi:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer l'email. Vérifiez votre connexion internet.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingEmail(false);
+    }
   };
 
   const handleClearData = () => {
@@ -138,13 +193,52 @@ export default function Profile() {
           
           <Card className="p-4 bg-gradient-card border-border/50">
             <div className="space-y-3">
+              <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    className="w-full justify-start"
+                    variant="outline"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    Sauvegarder par email
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Sauvegarde par email</DialogTitle>
+                    <DialogDescription>
+                      Entrez votre adresse email pour recevoir vos données
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Adresse email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="votre@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    <Button 
+                      onClick={handleEmailBackup} 
+                      className="w-full"
+                      disabled={isSendingEmail}
+                    >
+                      {isSendingEmail ? "Envoi en cours..." : "Envoyer la sauvegarde"}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
               <Button
                 onClick={handleExport}
                 className="w-full justify-start"
                 variant="outline"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Exporter mes données
+                Télécharger une copie locale
               </Button>
 
               <div>
@@ -163,7 +257,7 @@ export default function Profile() {
                     onClick={() => document.getElementById("import-file")?.click()}
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Importer des données
+                    Restaurer depuis un fichier
                   </Button>
                 </label>
               </div>

@@ -1,1 +1,4 @@
 project_id = "ykooukcwztkvsvayoibc"
+
+[functions.send-backup-email]
+verify_jwt = false
