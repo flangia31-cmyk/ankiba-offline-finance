@@ -35,7 +35,7 @@ const handler = async (req: Request): Promise<Response> => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Ankiba <onboarding@resend.dev>",
+        from: "Ankiba <support@ankiba.tech>",
         to: [email],
         subject: "Sauvegarde Ankiba - Vos données financières",
         html: `
