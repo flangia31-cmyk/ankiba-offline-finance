@@ -110,11 +110,22 @@ export default function Profile() {
       setEmail("");
     } catch (error: any) {
       console.error("Erreur lors de l'envoi:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'envoyer l'email. Vérifiez votre connexion internet.",
-        variant: "destructive",
-      });
+      
+      // Vérifie si c'est une erreur de validation de domaine Resend
+      const errorMessage = error.message || "";
+      if (errorMessage.includes("verify a domain") || errorMessage.includes("validation_error")) {
+        toast({
+          title: "Configuration Resend requise",
+          description: "Veuillez vérifier un domaine sur resend.com/domains pour envoyer des emails à toute adresse.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Impossible d'envoyer l'email. Vérifiez votre connexion internet.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSendingEmail(false);
     }
