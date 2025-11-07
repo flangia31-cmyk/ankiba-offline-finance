@@ -55,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
         attachments: [
           {
             filename: `ankiba-backup-${new Date().toISOString().split('T')[0]}.json`,
-            content: btoa(backupData),
+            content: btoa(unescape(encodeURIComponent(backupData))),
           },
         ],
       }),
