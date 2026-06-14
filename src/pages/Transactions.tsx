@@ -85,7 +85,70 @@ export default function Transactions() {
     });
   };
 
-  return (
+  const handleScanReceipt = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setIsScanning(true);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const { data, error } = await supabase.functions.invoke("scan-receipt", {
+        body: { image: base64 },
+      });
+
+      if (error || data?.error) {
+        toast({
+          title: "Analyse impossible",
+          description: data?.error || "Impossible d'analyser le ticket. Saisissez le montant manuellement.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const amount = Number(data?.amount) || 0;
+      if (amount <= 0) {
+        toast({
+          title: "Montant introuvable",
+          description: "Aucun montant détecté. Saisissez-le manuellement.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const detectedCategory: string | undefined =
+        data?.category && EXPENSE_CATEGORIES.includes(data.category) ? data.category : undefined;
+
+      setFormData((prev) => ({
+        ...prev,
+        type: "expense",
+        amount: String(amount),
+        category: detectedCategory || prev.category,
+        description: data?.description || prev.description,
+      }));
+
+      toast({
+        title: "Ticket analysé",
+        description: "Vérifiez et corrigez les champs si besoin avant d'enregistrer.",
+      });
+    } catch {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'analyse.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+
     <Layout>
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
