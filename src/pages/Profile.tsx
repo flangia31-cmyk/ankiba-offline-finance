@@ -1,14 +1,10 @@
-import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Download, Upload, Trash2, Lock, Info, Palette, Mail } from "lucide-react";
+import { Download, Upload, Trash2, Lock, Info, Palette } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,14 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 export default function Profile() {
   const { toast } = useToast();
