@@ -137,45 +137,6 @@ export default function Profile() {
           
           <Card className="p-4 bg-gradient-card border-border/50">
             <div className="space-y-3">
-              <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    className="w-full justify-start"
-                    variant="outline"
-                  >
-                    <Mail className="w-4 h-4 mr-2" />
-                    Sauvegarder par email
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Sauvegarde par email</DialogTitle>
-                    <DialogDescription>
-                      Entrez votre adresse email pour recevoir vos données
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Adresse email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="votre@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                    <Button 
-                      onClick={handleEmailBackup} 
-                      className="w-full"
-                      disabled={isSendingEmail}
-                    >
-                      {isSendingEmail ? "Envoi en cours..." : "Envoyer la sauvegarde"}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
               <Button
                 onClick={handleExport}
                 className="w-full justify-start"
