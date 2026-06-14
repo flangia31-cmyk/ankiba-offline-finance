@@ -19,9 +19,6 @@ import {
 
 export default function Profile() {
   const { toast } = useToast();
-  const [email, setEmail] = useState("");
-  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
 
   const handleExport = () => {
     const data = exportData();
