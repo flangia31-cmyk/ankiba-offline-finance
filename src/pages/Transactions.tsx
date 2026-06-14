@@ -1,18 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { TransactionCard } from "@/components/TransactionCard";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, ScanLine, Loader2 } from "lucide-react";
 import { getData, deleteTransaction, addTransaction, Transaction, EXPENSE_CATEGORIES, INCOME_CATEGORIES, getCurrency, CURRENCIES } from "@/lib/storage";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
   const currencyCode = getCurrency() || 'KMF';
@@ -82,6 +85,69 @@ export default function Transactions() {
     });
   };
 
+  const handleScanReceipt = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setIsScanning(true);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const { data, error } = await supabase.functions.invoke("scan-receipt", {
+        body: { image: base64 },
+      });
+
+      if (error || data?.error) {
+        toast({
+          title: "Analyse impossible",
+          description: data?.error || "Impossible d'analyser le ticket. Saisissez le montant manuellement.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const amount = Number(data?.amount) || 0;
+      if (amount <= 0) {
+        toast({
+          title: "Montant introuvable",
+          description: "Aucun montant détecté. Saisissez-le manuellement.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const detectedCategory: string | undefined =
+        data?.category && EXPENSE_CATEGORIES.includes(data.category) ? data.category : undefined;
+
+      setFormData((prev) => ({
+        ...prev,
+        type: "expense",
+        amount: String(amount),
+        category: detectedCategory || prev.category,
+        description: data?.description || prev.description,
+      }));
+
+      toast({
+        title: "Ticket analysé",
+        description: "Vérifiez et corrigez les champs si besoin avant d'enregistrer.",
+      });
+    } catch {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'analyse.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="p-6 space-y-6">
@@ -105,6 +171,34 @@ export default function Transactions() {
                 <DialogTitle>Nouvelle transaction</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={handleScanReceipt}
+                />
+                <div className="rounded-lg border border-dashed border-border/60 p-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    disabled={isScanning}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {isScanning ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <ScanLine className="w-4 h-4 mr-2" />
+                    )}
+                    {isScanning ? "Analyse en cours…" : "Scanner un ticket (optionnel)"}
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-2 text-center">
+                    Prenez une photo de votre ticket pour remplir le montant automatiquement.
+                  </p>
+                </div>
+
                 <div>
                   <Label>Type</Label>
                   <Select
