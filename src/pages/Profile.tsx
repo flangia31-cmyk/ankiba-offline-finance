@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Download, Upload, Trash2, Lock, Info, Palette } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
+import { QRDataShare } from "@/components/QRDataShare";
 import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -166,6 +167,10 @@ export default function Profile() {
                   </Button>
                 </label>
               </div>
+
+              <QRDataShare />
+
+
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
