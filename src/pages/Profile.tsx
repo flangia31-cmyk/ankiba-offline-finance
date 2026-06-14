@@ -64,58 +64,6 @@ export default function Profile() {
     reader.readAsText(file);
   };
 
-  const handleEmailBackup = async () => {
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      toast({
-        title: "Email invalide",
-        description: "Veuillez entrer une adresse email valide.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSendingEmail(true);
-    try {
-      const backupData = exportData();
-      
-      const { data, error } = await supabase.functions.invoke('send-backup-email', {
-        body: { 
-          email: email,
-          backupData: backupData
-        }
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Sauvegarde envoyée",
-        description: `Vos données ont été envoyées à ${email}. Vérifiez votre boîte mail.`,
-      });
-      setIsEmailDialogOpen(false);
-      setEmail("");
-    } catch (error: any) {
-      console.error("Erreur lors de l'envoi:", error);
-      
-      // Vérifie si c'est une erreur de validation de domaine Resend
-      const errorMessage = error.message || "";
-      if (errorMessage.includes("verify a domain") || errorMessage.includes("validation_error")) {
-        toast({
-          title: "Configuration Resend requise",
-          description: "Veuillez vérifier un domaine sur resend.com/domains pour envoyer des emails à toute adresse.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Erreur",
-          description: "Impossible d'envoyer l'email. Vérifiez votre connexion internet.",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsSendingEmail(false);
-    }
-  };
-
   const handleClearData = () => {
     saveData({ transactions: [], goals: [], chargesFixes: [], monthlyBudget: 0 });
     toast({
