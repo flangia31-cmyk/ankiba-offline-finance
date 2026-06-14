@@ -14,6 +14,8 @@ import { supabase } from "@/integrations/supabase/client";
 export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
   const currencyCode = getCurrency() || 'KMF';
