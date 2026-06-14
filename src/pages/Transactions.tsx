@@ -171,6 +171,34 @@ export default function Transactions() {
                 <DialogTitle>Nouvelle transaction</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={handleScanReceipt}
+                />
+                <div className="rounded-lg border border-dashed border-border/60 p-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    disabled={isScanning}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {isScanning ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <ScanLine className="w-4 h-4 mr-2" />
+                    )}
+                    {isScanning ? "Analyse en cours…" : "Scanner un ticket (optionnel)"}
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-2 text-center">
+                    Prenez une photo de votre ticket pour remplir le montant automatiquement.
+                  </p>
+                </div>
+
                 <div>
                   <Label>Type</Label>
                   <Select
