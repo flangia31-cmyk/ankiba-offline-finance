@@ -168,6 +168,10 @@ export default function Profile() {
                 </label>
               </div>
 
+              <QRDataShare />
+
+
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
