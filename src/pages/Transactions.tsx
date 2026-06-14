@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { TransactionCard } from "@/components/TransactionCard";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, ScanLine, Loader2 } from "lucide-react";
 import { getData, deleteTransaction, addTransaction, Transaction, EXPENSE_CATEGORIES, INCOME_CATEGORIES, getCurrency, CURRENCIES } from "@/lib/storage";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
