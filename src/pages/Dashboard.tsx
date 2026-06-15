@@ -122,20 +122,53 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* Financial Advice */}
+        {/* Score de santé financière */}
+        {health && (
+          <Card className="p-5 bg-gradient-card border-border/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Activity className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Santé financière</p>
+                  <p className={`text-lg font-bold ${healthColors[health.color]}`}>{health.label}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className={`text-3xl font-bold ${healthColors[health.color]}`}>{health.score}</p>
+                <p className="text-xs text-muted-foreground">/ 100</p>
+              </div>
+            </div>
+            <div className="mt-3 h-2 rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-primary transition-all"
+                style={{ width: `${health.score}%` }}
+              />
+            </div>
+          </Card>
+        )}
+
+        {/* Analyse intelligente */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold">Conseils du jour</h2>
+            <Brain className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold">Analyse intelligente</h2>
           </div>
-          
+
           <div className="space-y-3">
-            {advice.map((tip, index) => (
+            {insights.map((insight) => (
               <Card
-                key={index}
-                className="p-4 bg-gradient-card border-border/50 hover:shadow-soft transition-all"
+                key={insight.id}
+                className={`p-4 border hover:shadow-soft transition-all ${levelStyles[insight.level]}`}
               >
-                <p className="text-sm leading-relaxed">{tip}</p>
+                <div className="flex gap-3">
+                  <span className="text-2xl leading-none">{insight.icon}</span>
+                  <div className="space-y-1">
+                    <p className="font-semibold text-sm">{insight.title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{insight.message}</p>
+                  </div>
+                </div>
               </Card>
             ))}
           </div>
