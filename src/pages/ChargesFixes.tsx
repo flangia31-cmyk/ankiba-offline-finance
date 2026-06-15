@@ -21,6 +21,7 @@ import { useAmountMask } from "@/hooks/use-mask-amount";
 import { toast } from "sonner";
 
 export default function ChargesFixes() {
+  useAmountMask();
   const [charges, setCharges] = useState<ChargeFixe[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
