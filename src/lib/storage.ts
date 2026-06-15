@@ -125,6 +125,7 @@ export interface FinancialData {
 
 const STORAGE_KEY = 'ankiba_data';
 const CURRENCY_KEY = 'ankiba_currency';
+const MASK_AMOUNT_KEY = 'ankiba_mask_amount';
 
 // Initialize default data
 const defaultData: FinancialData = {
