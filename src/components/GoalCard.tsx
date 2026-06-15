@@ -14,6 +14,7 @@ interface GoalCardProps {
 }
 
 export const GoalCard = ({ goal, onDelete, onAddAmount }: GoalCardProps) => {
+  useAmountMask();
   const progress = (goal.currentAmount / goal.targetAmount) * 100;
   const remaining = goal.targetAmount - goal.currentAmount;
   const advice = calculateSavingsAdvice(goal.targetAmount, goal.currentAmount, goal.deadline);
