@@ -22,6 +22,7 @@ import {
 
 export default function Profile() {
   const { toast } = useToast();
+  const masked = useAmountMask();
 
   const handleExport = () => {
     const data = exportData();
