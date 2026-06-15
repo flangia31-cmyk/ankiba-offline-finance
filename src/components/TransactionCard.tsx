@@ -11,6 +11,7 @@ interface TransactionCardProps {
 }
 
 export const TransactionCard = ({ transaction, onDelete }: TransactionCardProps) => {
+  useAmountMask();
   const isIncome = transaction.type === "income";
   
   return (
