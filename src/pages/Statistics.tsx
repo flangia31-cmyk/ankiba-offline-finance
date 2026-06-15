@@ -1,5 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { getMonthlyStats, formatAmount } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, PieChart } from "lucide-react";
 
