@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 export default function Dashboard() {
   const [stats, setStats] = useState(getMonthlyStats());
   const [advice, setAdvice] = useState<string[]>([]);
+  const masked = useAmountMask();
 
   useEffect(() => {
     setStats(getMonthlyStats());
