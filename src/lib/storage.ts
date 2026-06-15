@@ -154,13 +154,39 @@ export const setCurrency = (currencyCode: string): void => {
   }
 };
 
+export const isAmountMasked = (): boolean => {
+  try {
+    return localStorage.getItem(MASK_AMOUNT_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
+export const toggleAmountMask = (): void => {
+  try {
+    const newValue = !isAmountMasked();
+    localStorage.setItem(MASK_AMOUNT_KEY, String(newValue));
+    window.dispatchEvent(new Event('ankiba-mask-change'));
+  } catch (error) {
+    console.error('Error toggling mask:', error);
+  }
+};
+
 export const formatAmount = (amount: number): string => {
   const currencyCode = getCurrency();
-  if (!currencyCode) return `${amount.toFixed(2)} F`;
-  
+  if (!currencyCode) {
+    return isAmountMasked() ? `•••• F` : `${amount.toFixed(2)} F`;
+  }
+
   const currency = CURRENCIES.find(c => c.code === currencyCode);
-  if (!currency) return `${amount.toFixed(2)} F`;
-  
+  if (!currency) {
+    return isAmountMasked() ? `•••• F` : `${amount.toFixed(2)} F`;
+  }
+
+  if (isAmountMasked()) {
+    return `•••• ${currency.symbol}`;
+  }
+
   // Format based on currency
   if (currency.code === 'EUR' || currency.code === 'GBP') {
     return `${amount.toFixed(2)} ${currency.symbol}`;
