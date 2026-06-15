@@ -1,7 +1,9 @@
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Upload, Trash2, Lock, Info, Palette } from "lucide-react";
+import { Download, Upload, Trash2, Lock, Info, Palette, Eye, EyeOff } from "lucide-react";
+import { toggleAmountMask } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
 import { QRDataShare } from "@/components/QRDataShare";
