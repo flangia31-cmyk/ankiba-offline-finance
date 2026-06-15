@@ -1,4 +1,5 @@
 import { Goal, formatAmount } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
 import { Target, Trash2, TrendingUp, Calendar, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -13,6 +14,7 @@ interface GoalCardProps {
 }
 
 export const GoalCard = ({ goal, onDelete, onAddAmount }: GoalCardProps) => {
+  useAmountMask();
   const progress = (goal.currentAmount / goal.targetAmount) * 100;
   const remaining = goal.targetAmount - goal.currentAmount;
   const advice = calculateSavingsAdvice(goal.targetAmount, goal.currentAmount, goal.deadline);

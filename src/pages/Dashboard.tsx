@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { OnboardingGuide } from "@/components/OnboardingGuide";
-import { getMonthlyStats, getFinancialAdvice, formatAmount } from "@/lib/storage";
-import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt } from "lucide-react";
+import { getMonthlyStats, getFinancialAdvice, formatAmount, toggleAmountMask } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
+import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt, Eye, EyeOff } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [stats, setStats] = useState(getMonthlyStats());
   const [advice, setAdvice] = useState<string[]>([]);
+  const masked = useAmountMask();
 
   useEffect(() => {
     setStats(getMonthlyStats());
@@ -21,13 +23,26 @@ export default function Dashboard() {
       <OnboardingGuide />
       <div className="p-6 space-y-6 animate-fade-in">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Ankiba
-          </h1>
-          <p className="text-muted-foreground">
-            Votre conseiller financier personnel
-          </p>
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              Ankiba
+            </h1>
+            <p className="text-muted-foreground">
+              Votre conseiller financier personnel
+            </p>
+          </div>
+          <button
+            onClick={toggleAmountMask}
+            className="p-2.5 rounded-xl bg-gradient-card border border-border/50 hover:shadow-soft transition-all"
+            aria-label={masked ? "Afficher les montants" : "Masquer les montants"}
+          >
+            {masked ? (
+              <EyeOff className="w-5 h-5 text-muted-foreground" />
+            ) : (
+              <Eye className="w-5 h-5 text-primary" />
+            )}
+          </button>
         </div>
 
         {/* Stats Grid */}

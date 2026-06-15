@@ -1,4 +1,5 @@
 import { Transaction, formatAmount } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
 import { Trash2, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -10,6 +11,7 @@ interface TransactionCardProps {
 }
 
 export const TransactionCard = ({ transaction, onDelete }: TransactionCardProps) => {
+  useAmountMask();
   const isIncome = transaction.type === "income";
   
   return (

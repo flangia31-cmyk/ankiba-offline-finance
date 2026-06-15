@@ -1,7 +1,9 @@
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Upload, Trash2, Lock, Info, Palette } from "lucide-react";
+import { Download, Upload, Trash2, Lock, Info, Palette, Eye, EyeOff } from "lucide-react";
+import { toggleAmountMask } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
 import { QRDataShare } from "@/components/QRDataShare";
@@ -20,6 +22,7 @@ import {
 
 export default function Profile() {
   const { toast } = useToast();
+  const masked = useAmountMask();
 
   const handleExport = () => {
     const data = exportData();
@@ -124,10 +127,32 @@ export default function Profile() {
               <div className="flex-1">
                 <p className="font-medium mb-1">Données 100% locales</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Toutes vos données sont stockées uniquement sur votre appareil. 
+                  Toutes vos données sont stockées uniquement sur votre appareil.
                   Aucune information n'est envoyée sur Internet. Vous seul avez accès à vos finances.
                 </p>
               </div>
+            </div>
+          </Card>
+
+          <Card className="p-4 bg-gradient-card border-border/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium mb-1">Masquer les montants</p>
+                <p className="text-sm text-muted-foreground">
+                  Cacher les sommes pour plus de discrétion
+                </p>
+              </div>
+              <button
+                onClick={toggleAmountMask}
+                className="p-2.5 rounded-xl border border-border/50 hover:bg-accent transition-all"
+                aria-label={masked ? "Afficher les montants" : "Masquer les montants"}
+              >
+                {masked ? (
+                  <EyeOff className="w-5 h-5 text-muted-foreground" />
+                ) : (
+                  <Eye className="w-5 h-5 text-primary" />
+                )}
+              </button>
             </div>
           </Card>
         </div>
