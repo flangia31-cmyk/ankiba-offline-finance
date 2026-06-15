@@ -13,10 +13,12 @@ import {
   deleteChargeFixe,
   formatAmount,
   getTotalChargesFixes,
-  ChargeFixe 
+  ChargeFixe,
+  getCurrency,
+  CURRENCIES,
 } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
 import { toast } from "sonner";
-import { getCurrency, CURRENCIES } from "@/lib/storage";
 
 export default function ChargesFixes() {
   const [charges, setCharges] = useState<ChargeFixe[]>([]);
