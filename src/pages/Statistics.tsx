@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, PieChart } from "lucide-react";
 
 export default function Statistics() {
+  useAmountMask();
   const stats = getMonthlyStats();
 
   const chartData = Object.entries(stats.expensesByCategory)
