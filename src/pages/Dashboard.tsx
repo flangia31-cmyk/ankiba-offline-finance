@@ -2,20 +2,37 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { OnboardingGuide } from "@/components/OnboardingGuide";
-import { getMonthlyStats, getFinancialAdvice, formatAmount, toggleAmountMask } from "@/lib/storage";
+import { getMonthlyStats, formatAmount, toggleAmountMask } from "@/lib/storage";
+import { getSmartInsights, getFinancialHealth, type SmartInsight, type FinancialHealth } from "@/lib/financialAnalysis";
 import { useAmountMask } from "@/hooks/use-mask-amount";
-import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt, Eye, EyeOff } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, Brain, Receipt, Eye, EyeOff, Activity } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
+const levelStyles: Record<SmartInsight["level"], string> = {
+  positive: "border-success/40 bg-success/5",
+  warning: "border-warning/40 bg-warning/5",
+  danger: "border-destructive/40 bg-destructive/5",
+  info: "border-primary/30 bg-primary/5",
+};
+
+const healthColors: Record<FinancialHealth["color"], string> = {
+  success: "text-success",
+  primary: "text-primary",
+  warning: "text-warning",
+  destructive: "text-destructive",
+};
+
 export default function Dashboard() {
   const [stats, setStats] = useState(getMonthlyStats());
-  const [advice, setAdvice] = useState<string[]>([]);
+  const [insights, setInsights] = useState<SmartInsight[]>([]);
+  const [health, setHealth] = useState<FinancialHealth | null>(null);
   const masked = useAmountMask();
 
   useEffect(() => {
     setStats(getMonthlyStats());
-    setAdvice(getFinancialAdvice());
+    setInsights(getSmartInsights());
+    setHealth(getFinancialHealth());
   }, []);
 
   return (
