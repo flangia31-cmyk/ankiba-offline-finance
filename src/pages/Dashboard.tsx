@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { OnboardingGuide } from "@/components/OnboardingGuide";
-import { getMonthlyStats, getFinancialAdvice, formatAmount } from "@/lib/storage";
-import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt } from "lucide-react";
+import { getMonthlyStats, getFinancialAdvice, formatAmount, toggleAmountMask } from "@/lib/storage";
+import { useAmountMask } from "@/hooks/use-mask-amount";
+import { TrendingUp, TrendingDown, Wallet, Lightbulb, Receipt, Eye, EyeOff } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
