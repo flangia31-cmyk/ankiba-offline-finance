@@ -229,8 +229,9 @@ export default function Profile() {
           </Card>
         </div>
 
-
+        {/* Data Management */}
         <div className="space-y-3">
+
           <h2 className="text-lg font-semibold">Gestion des données</h2>
           
           <Card className="p-4 bg-gradient-card border-border/50">
