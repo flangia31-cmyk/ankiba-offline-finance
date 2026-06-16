@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Download, Upload, Trash2, Lock, Info, Palette, Eye, EyeOff, BellRing } from "lucide-react";
+import { Download, Upload, Trash2, Lock, Info, Palette, Eye, EyeOff, BellRing, Coins } from "lucide-react";
+import { CurrencyChanger } from "@/components/CurrencyChanger";
 import { toggleAmountMask, getAlertSettings, saveAlertSettings } from "@/lib/storage";
 import { useAmountMask } from "@/hooks/use-mask-amount";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -125,6 +126,17 @@ export default function Profile() {
             </div>
           </Card>
         </div>
+
+        {/* Devise */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Coins className="w-5 h-5" />
+            Devise
+          </h2>
+          <CurrencyChanger />
+        </div>
+
+
 
         {/* Security */}
         <div className="space-y-3">

@@ -154,6 +154,50 @@ export const setCurrency = (currencyCode: string): void => {
   }
 };
 
+/**
+ * Convertit tous les montants stockés selon un taux de change et applique la nouvelle devise.
+ * Utilisé lors d'un changement de devise avec les cours mondiaux.
+ */
+export const convertAllAmounts = (rate: number, newCurrencyCode: string): void => {
+  const data = getData();
+
+  data.transactions = data.transactions.map(t => ({
+    ...t,
+    amount: Math.round(t.amount * rate * 100) / 100,
+  }));
+
+  data.goals = data.goals.map(g => ({
+    ...g,
+    targetAmount: Math.round(g.targetAmount * rate * 100) / 100,
+    currentAmount: Math.round(g.currentAmount * rate * 100) / 100,
+  }));
+
+  data.chargesFixes = data.chargesFixes.map(c => ({
+    ...c,
+    montant: Math.round(c.montant * rate * 100) / 100,
+  }));
+
+  data.monthlyBudget = Math.round((data.monthlyBudget || 0) * rate * 100) / 100;
+  data.currency = newCurrencyCode;
+
+  saveData(data);
+  setCurrency(newCurrencyCode);
+
+  // Convertit aussi la limite de budget des alertes si définie
+  try {
+    const raw = localStorage.getItem(ALERT_SETTINGS_KEY);
+    if (raw) {
+      const settings = JSON.parse(raw);
+      if (settings.budgetLimit) {
+        settings.budgetLimit = Math.round(settings.budgetLimit * rate * 100) / 100;
+        localStorage.setItem(ALERT_SETTINGS_KEY, JSON.stringify(settings));
+      }
+    }
+  } catch {
+    // ignore
+  }
+};
+
 export const isAmountMasked = (): boolean => {
   try {
     return localStorage.getItem(MASK_AMOUNT_KEY) === 'true';
