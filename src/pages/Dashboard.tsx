@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { OnboardingGuide } from "@/components/OnboardingGuide";
-import { getMonthlyStats, formatAmount, toggleAmountMask } from "@/lib/storage";
+import { getMonthlyStats, formatAmount, toggleAmountMask, checkAlerts, type LocalAlert } from "@/lib/storage";
 import { getSmartInsights, getFinancialHealth, type SmartInsight, type FinancialHealth } from "@/lib/financialAnalysis";
 import { useAmountMask } from "@/hooks/use-mask-amount";
-import { TrendingUp, TrendingDown, Wallet, Brain, Receipt, Eye, EyeOff, Activity } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { TrendingUp, TrendingDown, Wallet, Brain, Receipt, Eye, EyeOff, Activity, BellRing } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+
+const alertStyles: Record<LocalAlert["level"], string> = {
+  danger: "border-destructive/40 bg-destructive/5",
+  warning: "border-warning/40 bg-warning/5",
+};
 
 const levelStyles: Record<SmartInsight["level"], string> = {
   positive: "border-success/40 bg-success/5",
