@@ -33,13 +33,26 @@ export default function Dashboard() {
   const [stats, setStats] = useState(getMonthlyStats());
   const [insights, setInsights] = useState<SmartInsight[]>([]);
   const [health, setHealth] = useState<FinancialHealth | null>(null);
+  const [alerts, setAlerts] = useState<LocalAlert[]>([]);
   const masked = useAmountMask();
+  const { toast } = useToast();
 
   useEffect(() => {
     setStats(getMonthlyStats());
     setInsights(getSmartInsights());
     setHealth(getFinancialHealth());
-  }, []);
+    const triggered = checkAlerts();
+    setAlerts(triggered);
+    triggered.forEach((a) => {
+      toast({
+        title: `${a.icon} ${a.title}`,
+        description: a.message,
+        variant: a.level === "danger" ? "destructive" : "default",
+      });
+    });
+  }, [toast]);
+
+
 
   return (
     <Layout>
