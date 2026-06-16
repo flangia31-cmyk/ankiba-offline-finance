@@ -81,6 +81,32 @@ export default function Dashboard() {
           </button>
         </div>
 
+        {/* Alertes locales */}
+        {alerts.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <BellRing className="w-5 h-5 text-destructive" />
+              <h2 className="text-lg font-semibold">Alertes</h2>
+            </div>
+            {alerts.map((alert) => (
+              <Card
+                key={alert.id}
+                className={`p-4 border ${alertStyles[alert.level]}`}
+              >
+                <div className="flex gap-3">
+                  <span className="text-2xl leading-none">{alert.icon}</span>
+                  <div className="space-y-1">
+                    <p className="font-semibold text-sm">{alert.title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{alert.message}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <StatCard
