@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { OnboardingGuide } from "@/components/OnboardingGuide";
-import { getMonthlyStats, formatAmount, toggleAmountMask } from "@/lib/storage";
+import { getMonthlyStats, formatAmount, toggleAmountMask, checkAlerts, type LocalAlert } from "@/lib/storage";
 import { getSmartInsights, getFinancialHealth, type SmartInsight, type FinancialHealth } from "@/lib/financialAnalysis";
 import { useAmountMask } from "@/hooks/use-mask-amount";
-import { TrendingUp, TrendingDown, Wallet, Brain, Receipt, Eye, EyeOff, Activity } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { TrendingUp, TrendingDown, Wallet, Brain, Receipt, Eye, EyeOff, Activity, BellRing } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+
+const alertStyles: Record<LocalAlert["level"], string> = {
+  danger: "border-destructive/40 bg-destructive/5",
+  warning: "border-warning/40 bg-warning/5",
+};
 
 const levelStyles: Record<SmartInsight["level"], string> = {
   positive: "border-success/40 bg-success/5",
@@ -27,13 +33,26 @@ export default function Dashboard() {
   const [stats, setStats] = useState(getMonthlyStats());
   const [insights, setInsights] = useState<SmartInsight[]>([]);
   const [health, setHealth] = useState<FinancialHealth | null>(null);
+  const [alerts, setAlerts] = useState<LocalAlert[]>([]);
   const masked = useAmountMask();
+  const { toast } = useToast();
 
   useEffect(() => {
     setStats(getMonthlyStats());
     setInsights(getSmartInsights());
     setHealth(getFinancialHealth());
-  }, []);
+    const triggered = checkAlerts();
+    setAlerts(triggered);
+    triggered.forEach((a) => {
+      toast({
+        title: `${a.icon} ${a.title}`,
+        description: a.message,
+        variant: a.level === "danger" ? "destructive" : "default",
+      });
+    });
+  }, [toast]);
+
+
 
   return (
     <Layout>
@@ -61,6 +80,32 @@ export default function Dashboard() {
             )}
           </button>
         </div>
+
+        {/* Alertes locales */}
+        {alerts.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <BellRing className="w-5 h-5 text-destructive" />
+              <h2 className="text-lg font-semibold">Alertes</h2>
+            </div>
+            {alerts.map((alert) => (
+              <Card
+                key={alert.id}
+                className={`p-4 border ${alertStyles[alert.level]}`}
+              >
+                <div className="flex gap-3">
+                  <span className="text-2xl leading-none">{alert.icon}</span>
+                  <div className="space-y-1">
+                    <p className="font-semibold text-sm">{alert.title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{alert.message}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
