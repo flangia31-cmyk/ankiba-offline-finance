@@ -27,6 +27,14 @@ import {
 export default function Profile() {
   const { toast } = useToast();
   const masked = useAmountMask();
+  const [alerts, setAlerts] = useState(getAlertSettings());
+
+  const updateAlerts = (updates: Partial<typeof alerts>) => {
+    const next = { ...alerts, ...updates };
+    setAlerts(next);
+    saveAlertSettings(next);
+  };
+
 
   const handleExport = () => {
     const data = exportData();
