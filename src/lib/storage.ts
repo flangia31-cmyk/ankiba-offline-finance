@@ -172,6 +172,91 @@ export const toggleAmountMask = (): void => {
   }
 };
 
+// ===== Alertes locales =====
+const ALERT_SETTINGS_KEY = 'ankiba_alert_settings';
+
+export interface AlertSettings {
+  enabled: boolean;
+  budgetLimit: number; // limite de dépenses mensuelles (0 = désactivé)
+  savingsRateThreshold: number; // seuil du taux d'épargne en % (0 = désactivé)
+}
+
+export const defaultAlertSettings: AlertSettings = {
+  enabled: false,
+  budgetLimit: 0,
+  savingsRateThreshold: 10,
+};
+
+export const getAlertSettings = (): AlertSettings => {
+  try {
+    const raw = localStorage.getItem(ALERT_SETTINGS_KEY);
+    return raw ? { ...defaultAlertSettings, ...JSON.parse(raw) } : defaultAlertSettings;
+  } catch {
+    return defaultAlertSettings;
+  }
+};
+
+export const saveAlertSettings = (settings: AlertSettings): void => {
+  try {
+    localStorage.setItem(ALERT_SETTINGS_KEY, JSON.stringify(settings));
+    window.dispatchEvent(new Event('ankiba-alert-change'));
+  } catch (error) {
+    console.error('Error saving alert settings:', error);
+  }
+};
+
+export interface LocalAlert {
+  id: string;
+  level: 'danger' | 'warning';
+  icon: string;
+  title: string;
+  message: string;
+}
+
+/**
+ * Vérifie les seuils définis et retourne les alertes déclenchées.
+ */
+export const checkAlerts = (): LocalAlert[] => {
+  const settings = getAlertSettings();
+  if (!settings.enabled) return [];
+
+  const stats = getMonthlyStats();
+  const alerts: LocalAlert[] = [];
+
+  // Dépenses du mois en cours
+  const monthExpenses = stats.transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  // 1. Dépassement de budget
+  if (settings.budgetLimit > 0 && monthExpenses > settings.budgetLimit) {
+    const over = monthExpenses - settings.budgetLimit;
+    alerts.push({
+      id: 'budget-exceeded',
+      level: 'danger',
+      icon: '🚨',
+      title: 'Budget dépassé',
+      message: `Vos dépenses du mois (${formatAmount(monthExpenses)}) dépassent votre budget de ${formatAmount(settings.budgetLimit)}. Soit ${formatAmount(over)} de trop.`,
+    });
+  }
+
+  // 2. Taux d'épargne sous le seuil
+  if (settings.savingsRateThreshold > 0 && stats.totalIncome > 0) {
+    const savingsRate = (stats.balance / stats.totalIncome) * 100;
+    if (savingsRate < settings.savingsRateThreshold) {
+      alerts.push({
+        id: 'low-savings-rate',
+        level: 'warning',
+        icon: '📉',
+        title: "Taux d'épargne faible",
+        message: `Votre taux d'épargne (${savingsRate.toFixed(0)}%) est sous votre seuil de ${settings.savingsRateThreshold}%. Réduisez vos dépenses pour le remonter.`,
+      });
+    }
+  }
+
+  return alerts;
+};
+
 export const formatAmount = (amount: number): string => {
   const currencyCode = getCurrency();
   if (!currencyCode) {
