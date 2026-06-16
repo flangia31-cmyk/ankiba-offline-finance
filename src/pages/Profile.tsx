@@ -126,6 +126,17 @@ export default function Profile() {
           </Card>
         </div>
 
+        {/* Devise */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Coins className="w-5 h-5" />
+            Devise
+          </h2>
+          <CurrencyChanger />
+        </div>
+
+
+
         {/* Security */}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold flex items-center gap-2">
