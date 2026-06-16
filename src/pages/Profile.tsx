@@ -169,7 +169,67 @@ export default function Profile() {
           </Card>
         </div>
 
-        {/* Data Management */}
+        {/* Alertes locales */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <BellRing className="w-5 h-5" />
+            Alertes
+          </h2>
+
+          <Card className="p-4 bg-gradient-card border-border/50 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium mb-1">Activer les alertes</p>
+                <p className="text-sm text-muted-foreground">
+                  Recevez un avertissement local selon vos seuils
+                </p>
+              </div>
+              <Switch
+                checked={alerts.enabled}
+                onCheckedChange={(checked) => updateAlerts({ enabled: checked })}
+              />
+            </div>
+
+            {alerts.enabled && (
+              <div className="space-y-4 pt-2 border-t border-border/50">
+                <div className="space-y-2">
+                  <Label htmlFor="budget-limit">Limite de dépenses mensuelles</Label>
+                  <Input
+                    id="budget-limit"
+                    type="number"
+                    min={0}
+                    inputMode="decimal"
+                    placeholder="0 = désactivé"
+                    value={alerts.budgetLimit || ""}
+                    onChange={(e) => updateAlerts({ budgetLimit: Number(e.target.value) || 0 })}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Alerte si vos dépenses du mois dépassent ce montant.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="savings-threshold">Seuil minimal du taux d'épargne (%)</Label>
+                  <Input
+                    id="savings-threshold"
+                    type="number"
+                    min={0}
+                    max={100}
+                    inputMode="decimal"
+                    placeholder="0 = désactivé"
+                    value={alerts.savingsRateThreshold || ""}
+                    onChange={(e) => updateAlerts({ savingsRateThreshold: Number(e.target.value) || 0 })}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Alerte si votre taux d'épargne tombe sous ce pourcentage.
+                  </p>
+                </div>
+              </div>
+            )}
+          </Card>
+        </div>
+
+
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Gestion des données</h2>
           
