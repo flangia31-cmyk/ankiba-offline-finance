@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Upload, Trash2, Lock, Info, Palette, Eye, EyeOff } from "lucide-react";
-import { toggleAmountMask } from "@/lib/storage";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Download, Upload, Trash2, Lock, Info, Palette, Eye, EyeOff, BellRing } from "lucide-react";
+import { toggleAmountMask, getAlertSettings, saveAlertSettings } from "@/lib/storage";
 import { useAmountMask } from "@/hooks/use-mask-amount";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { exportData, importData, saveData } from "@/lib/storage";
