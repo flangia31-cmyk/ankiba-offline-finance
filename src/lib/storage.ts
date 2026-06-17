@@ -63,6 +63,7 @@ export const CURRENCIES: Currency[] = [
   { code: 'EGP', symbol: 'E£', name: 'Livre égyptienne', flag: '🇪🇬' },
   { code: 'NGN', symbol: '₦', name: 'Naira nigérian', flag: '🇳🇬' },
   { code: 'KES', symbol: 'KSh', name: 'Shilling kényan', flag: '🇰🇪' },
+  { code: 'TZS', symbol: 'TSh', name: 'Shilling tanzanien', flag: '🇹🇿' },
   { code: 'MAD', symbol: 'DH', name: 'Dirham marocain', flag: '🇲🇦' },
   { code: 'TND', symbol: 'DT', name: 'Dinar tunisien', flag: '🇹🇳' },
   { code: 'XOF', symbol: 'CFA', name: 'Franc CFA (BCEAO)', flag: '🌍' },
