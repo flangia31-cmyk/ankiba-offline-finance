@@ -20,7 +20,7 @@ export const StatCard = ({ title, value, icon: Icon, trend, className }: StatCar
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <p className="text-xs sm:text-sm text-muted-foreground mb-1 truncate">{title}</p>
-          <p className="text-base sm:text-xl font-bold tracking-tight break-words leading-tight [overflow-wrap:anywhere]">{value}</p>
+          <p className="text-sm sm:text-base font-bold tracking-tight break-words leading-tight [overflow-wrap:anywhere]">{value}</p>
         </div>
         <div className={cn(
           "p-2 sm:p-3 rounded-xl flex-shrink-0",
